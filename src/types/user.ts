@@ -5,5 +5,5 @@ export interface User extends Authenticable{
 }
 
 export interface IUser {
-  login: (email: string) => Promise<string>;
+  login: (email: string) => Promise<string | Error>;
 }
