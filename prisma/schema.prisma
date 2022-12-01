@@ -1,0 +1,17 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native"]
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Placeholder, please remove or replace.
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
