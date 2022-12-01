@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const resolvers = {
+export default  {
   Query: {
     hello : (_: never, args: {name: string}): string => {
       console.log(args)
@@ -7,5 +6,3 @@ const resolvers = {
     }
   }
 }
-
-export default resolvers;

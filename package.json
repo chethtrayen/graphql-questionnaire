@@ -40,6 +40,7 @@
     "winston": "3.3.3"
   },
   "devDependencies": {
+    "@graphql-tools/load-files": "^6.6.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/errorhandler": "1.5.0",
     "@types/eslint": "7.2.13",
@@ -55,6 +56,7 @@
     "eslint": "8.16.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-jest": "^26.4.5",
+    "graphql-tools": "^8.3.12",
     "husky": "8.0.1",
     "jest": "27.5.1",
     "nodemon": "2.0.7",
