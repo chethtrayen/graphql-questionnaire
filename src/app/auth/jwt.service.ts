@@ -1,21 +1,25 @@
 import jwt from "jsonwebtoken";
 import { JwtError, JwtExpiredError, JwtNotBeforeError } from "./errors";
+import config from "../../config";
+
+const secret = config.auth.jwtSecret;
+const expiresIn = config.auth.jwtExpiresIn;
 
 // export const JwtService: JwtServiceInterface = {
 export const JwtService = {
-  sign(payload: string | object | Buffer, secret: jwt.Secret, options?: jwt.SignOptions): string {
+  sign(payload: string | object | Buffer, options?: jwt.SignOptions): string {
     return jwt.sign(payload, secret, options);
   },
 
-  signWithExpiry(payload: string | object | Buffer, secret: jwt.Secret, expiresIn: number): string {
-    return this.sign(payload, secret, { expiresIn });
+  signWithExpiry(payload: string | object | Buffer): string {
+    return this.sign(payload, { expiresIn });
   },
 
-  signWithNotBefore(payload: string | object | Buffer, secret: jwt.Secret, notBefore: number): string {
-    return this.sign(payload, secret, { notBefore });
+  signWithNotBefore(payload: string | object | Buffer, notBefore: number): string {
+    return this.sign(payload, { notBefore });
   },
 
-  verify(token: string, secret: jwt.Secret): jwt.JwtPayload | string {
+  verify(token: string): jwt.JwtPayload | string {
     try {
       return jwt.verify(token, secret);
     } catch (err) {
