@@ -14,10 +14,10 @@ async function main(): Promise<void> {
     app.use(errorHandler());
   }
 
-  app.get('/', (req, res) => {
-    console.log(req.query)
-    res.json({hello: 'hi'})
-  })
+  app.get("/", (req, res) => {
+    console.log(req.query);
+    res.json({ hello: "hi" });
+  });
 
   await startGraphQLServer(app, httpServer);
 
