@@ -17,6 +17,7 @@
     "paths": {
       "@config": ["src/config/index"],
       "@context": ["src/app/graphql/context"],
+      "@helpers/*": ["src/app/helpers/*"],
       "@jwtService": ["src/app/auth/jwt.service"],
       "@modules/*": ["src/app/modules/*"],
       "@prismaClient": ["src/prisma-client"],
