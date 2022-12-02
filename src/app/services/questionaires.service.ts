@@ -1,13 +1,10 @@
 import prisma from '../../prisma-client';
-import { Context, IQuestionnaire, Questionnaire, QuestionnaireEditable } from '../../types'
+import { IQuestionnaire, Questionnaire, QuestionnaireEditable } from '../../types'
 
 const QuestionnaireService: IQuestionnaire = {
-  create: async(questionnaire: QuestionnaireEditable, context: Context): Promise<Questionnaire | Error> => {
+  create: async(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | Error> => {
     try{
-      let userId: number;
-
-      if(context.user){
-        userId = context.user.id
+      if(userId){
         const insert: Questionnaire = await prisma.questionnaire.create({
           data: {
             ownerId: userId,

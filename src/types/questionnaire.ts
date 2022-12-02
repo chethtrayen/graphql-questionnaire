@@ -24,7 +24,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireEditable, context: Context): Promise<Questionnaire | Error>;
+  create(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | Error>;
 
   /**
    * (Owner only) delete questionnaire
