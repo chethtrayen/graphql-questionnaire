@@ -1,7 +1,9 @@
-export enum QuestionnaireStatus  {
+import { ApolloError } from "@apollo/client/errors";
+
+export enum QuestionnaireStatus {
   DRAFT = "DRAFT",
   PUBLISH = "PUBLISH",
-  ARCHIVE = "ARCHIVE"
+  ARCHIVE = "ARCHIVE",
 }
 
 export type Questionnaire = {
@@ -9,20 +11,21 @@ export type Questionnaire = {
   ownerId: number;
   status: QuestionnaireStatus;
   title: string;
-}
+};
 
-export type QuestionnaireEditable = Omit<Questionnaire, 'id' | 'ownerId' | 'status'>
-
+export type QuestionnaireEditable = Omit<Questionnaire, "id" | "ownerId" | "status">;
 
 export interface IQuestionnaire {
-
   /**
    * Create questionnaire
-   * 
+   *
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | Error>;
+  create(
+    questionnaire: QuestionnaireEditable,
+    userId: number | undefined
+  ): Promise<Questionnaire | ApolloError>;
 
   /**
    * (Owner only) delete questionnaire
@@ -33,7 +36,7 @@ export interface IQuestionnaire {
 
   // /**
   //  * Get questionnaire
-  //  * If publish this is accessible to all, else accessible to the owner 
+  //  * If publish this is accessible to all, else accessible to the owner
   //  *
   //  * @param id questionnaire id
   //  */

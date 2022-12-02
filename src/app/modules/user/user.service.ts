@@ -1,18 +1,18 @@
+import { ApolloError } from "@apollo/client/errors";
 import { IUser } from "@type";
 import { JwtService } from "../../auth/jwt.service";
 
 import UserRepo from "./user.repo";
 
 const UserService: IUser = {
-  login: async (email: string): Promise<string | Error> => {
+  login: async (email: string): Promise<string | ApolloError> => {
     try {
       const user = await UserRepo.getByEmail(email);
 
       if (user) {
-        const { id } = user;
-        return JwtService.sign({ id });
+        return JwtService.sign({ id: user.id });
       } else {
-        throw Error("Error: user not found.");
+        throw new ApolloError({ errorMessage: "Error: failed to login" });
       }
     } catch (error) {
       throw error;
