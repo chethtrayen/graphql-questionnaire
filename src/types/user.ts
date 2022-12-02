@@ -2,7 +2,7 @@ import { Authenticable } from "./auth";
 
 export interface User extends Authenticable{
   id: number;
-  name: string;
+  name?: string;
 }
 
 export interface IUser {

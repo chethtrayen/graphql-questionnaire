@@ -10,7 +10,7 @@ services:
       target: builder
     volumes:
       - ".:/var/app"
-    command: sh -c "npx prisma migrate dev && npx && npx prisma db seed"
+    command: sh -c "npx prisma migrate reset && npx prisma migrate dev && npx && npx prisma db seed"
     depends_on:
       - postgres
     environment:

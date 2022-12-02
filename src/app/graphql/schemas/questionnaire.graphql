@@ -1,0 +1,16 @@
+type Questionnaire {
+  id: Int!
+  ownerId: Int!
+  status: QuestionnaireStatus!
+  title: String!
+}
+
+enum QuestionnaireStatus {
+  DRAFT,
+  PUBLISH,
+  ARCHIVE
+}
+
+type Mutation{ 
+  createQuestionnaire (title: String!) : Questionnaire!
+}

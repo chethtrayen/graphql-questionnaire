@@ -9,8 +9,13 @@ async function main() {
     update: {},
     create: {
       email: 'foo@bar.com',
-      name: 'foobar'
-    }
+      name: 'foobar',
+      questionnaires: {
+        create: [{
+          title: 'test'
+        }]
+      }
+    },
   });
 
   await prisma.user.upsert({

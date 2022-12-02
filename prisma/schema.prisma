@@ -11,7 +11,23 @@ datasource db {
 
 // Placeholder, please remove or replace.
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  name           String?
+  questionnaires Questionnaire[]
 }
+
+model Questionnaire{
+  id       Int                 @id @default(autoincrement())
+  owner    User                @relation(fields: [owner_id], references: [id])
+  owner_id Int      
+  status   QuestionnaireStatus @default(DRAFT)
+  title    String
+}
+
+enum QuestionnaireStatus{
+  DRAFT
+  PUBLISH
+  ARCHIVE
+}
+

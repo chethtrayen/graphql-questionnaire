@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // User object must implement Authenticable interface.
 // It can be adjusted as needed, depending on authentication strategy.
 export interface Authenticable {
-  email: string;
+  email?: string;
 }
 
 export interface JwtService {
