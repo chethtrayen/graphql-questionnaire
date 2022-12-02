@@ -1,21 +1,20 @@
-import prisma from "@prisma"
-import { User } from "@type"
+import prisma from "@prisma";
+import { User } from "@type";
 
-
-const getByEmail = async (email: string): Promise<User> => {
-  const user = await prisma.user.findFirst({
+const getByEmail = async (email: string): Promise<User | null> => {
+  const user = (await prisma.user.findFirst({
     where: {
       email: {
-        equals: email
-      }
-    }
-  }) as unknown as User
+        equals: email,
+      },
+    },
+  })) as unknown as User;
 
-  return user
-}
+  return user;
+};
 
 const UserRepo = {
-  getByEmail
-}
+  getByEmail,
+};
 
-export default UserRepo
+export default UserRepo;
