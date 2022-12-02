@@ -1,4 +1,4 @@
-import userService from '../services/user.service'
+import userService from './user.service'
 
 export default {
   Query: {

@@ -3,10 +3,8 @@ import express from "express";
 import http from "http";
 import request from "supertest";
 
-import { getGraphQLContext } from '../../src/app/graphql/context'
-
-import resolvers from '../utils/resolvers'
-import typeDefs from '../utils/schemas'
+import { getGraphQLContext } from '@context'
+import {resolvers, typeDefs} from '@testUtils'
 
 describe("User e2e login", () => {
   let app: express.Application;

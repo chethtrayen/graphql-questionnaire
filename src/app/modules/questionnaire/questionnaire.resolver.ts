@@ -1,5 +1,5 @@
-import { Context, Questionnaire, QuestionnaireEditable } from "../../types";
-import questionnaireService from '../services/questionaires.service'
+import { Context, Questionnaire, QuestionnaireEditable } from "@type";
+import questionnaireService from './questionnaires.service'
 
 export default {
   Mutation : {

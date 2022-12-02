@@ -1,6 +1,6 @@
-import { Questionnaire ,QuestionnaireStatus } from "../../src/types"
-import prisma from "../../src/prisma-client"
-import questionnaireService from "../../src/app/services/questionaires.service";
+import questionnaireService from "@modules/questionnaire/questionnaires.service";
+import prisma from "@prisma"
+import { Questionnaire ,QuestionnaireStatus } from "@type"
 
 describe("Questionnaire unit test", () => {
 

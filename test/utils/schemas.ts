@@ -4,4 +4,4 @@ import path from "path";
 
 
 const typesArray = loadFilesSync(path.join(__dirname, '../../src/app/graphql/schemas/*.graphql'))
-export default mergeTypeDefs(typesArray)
+export const typeDefs =  mergeTypeDefs(typesArray)

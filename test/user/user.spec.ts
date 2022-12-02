@@ -1,5 +1,5 @@
-import userService from "../../src/app/services/user.service"
-import prisma from "../../src/prisma-client"
+import userService from "@modules/user/user.service"
+import prisma from "@prisma"
 
 describe("User unit test", () => {
   

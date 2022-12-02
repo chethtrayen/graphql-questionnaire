@@ -1,18 +1,16 @@
-import prisma from '../../prisma-client';
-import { IQuestionnaire, Questionnaire, QuestionnaireEditable } from '../../types'
+import { IQuestionnaire, Questionnaire, QuestionnaireEditable } from '@type'
+
+import QuestionnaireRepo from './questionnaire.repo'
 
 const QuestionnaireService: IQuestionnaire = {
   create: async(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | Error> => {
+    let insertRes: Questionnaire;
+
     try{
       if(userId){
-        const insert: Questionnaire = await prisma.questionnaire.create({
-          data: {
-            ownerId: userId,
-            title: questionnaire.title,
-          }
-        }) as unknown as Questionnaire
+        insertRes = await QuestionnaireRepo.create(userId, questionnaire.title);
 
-        return insert; 
+        return insertRes; 
       }
       else{
         throw new Error('Error: Failed to create group. No user logged in')

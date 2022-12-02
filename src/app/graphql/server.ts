@@ -23,7 +23,7 @@ export async function startGraphQLServer(
   const typeDefs = mergeTypeDefs(typesArray)
 
   // Merge resolver
-  const resolverArray = loadFilesSync(path.join(__dirname, '/../resolvers/*.ts'))
+  const resolverArray = loadFilesSync(path.join(__dirname, '/../modules/**/*.resolver.ts'))
   const resolvers = mergeResolvers(resolverArray)
 
   const server = new ApolloServer({

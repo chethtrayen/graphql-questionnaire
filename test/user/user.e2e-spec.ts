@@ -3,8 +3,7 @@ import express from "express";
 import http from "http";
 import request from "supertest";
 
-import resolvers from '../utils/resolvers'
-import typeDefs from '../utils/schemas'
+import {resolvers, typeDefs} from '@testUtils'
 
 describe("User e2e login", () => {
   let app: express.Application;
