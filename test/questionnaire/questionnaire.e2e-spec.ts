@@ -7,7 +7,7 @@ import { getGraphQLContext } from "@context";
 import { getUserTkn } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
 
-describe("User e2e login", () => {
+describe("Questionnaire", () => {
   let app: express.Application;
   let httpServer: http.Server;
   let server: ApolloServer;
@@ -32,8 +32,8 @@ describe("User e2e login", () => {
     await server.stop();
   });
 
-  describe("POST /login", () => {
-    const title = "foo@bar.com";
+  describe("POST /questionnare/create", () => {
+    const variables = { title: "foo@bar.com" };
 
     it("should return a successful response", async () => {
       const queryData = {
@@ -43,7 +43,7 @@ describe("User e2e login", () => {
             {id, ownerId, status, title}
           }
           `,
-        variables: { title },
+        variables,
       };
 
       const response = await request(httpServer)
@@ -62,7 +62,7 @@ describe("User e2e login", () => {
         })
       );
 
-      expect(response.body.data.createQuestionnaire.title).toEqual(title);
+      expect(response.body.data.createQuestionnaire.title).toEqual(variables.title);
     });
   });
 });

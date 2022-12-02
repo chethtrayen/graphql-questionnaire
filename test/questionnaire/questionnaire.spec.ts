@@ -31,7 +31,7 @@ describe("Questionnaire unit test", () => {
         // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
         expect(() =>
           questionnaireService.create({ title: mockQuestionnaire.title }, undefined)
-        ).rejects.toThrow("Error: Failed to create group. No user logged in");
+        ).rejects.toThrow("Error: Failed to create questionnaire");
       });
     });
   });

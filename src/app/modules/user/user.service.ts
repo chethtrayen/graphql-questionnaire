@@ -9,11 +9,11 @@ const UserService: IUser = {
     try {
       const user = await UserRepo.getByEmail(email);
 
-      if (user) {
-        return JwtService.sign({ id: user.id });
-      } else {
+      if (!user) {
         throw new ApolloError({ errorMessage: "Error: failed to login" });
       }
+
+      return JwtService.sign({ id: user.id });
     } catch (error) {
       throw error;
     }

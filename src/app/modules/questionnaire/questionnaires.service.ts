@@ -11,15 +11,17 @@ const QuestionnaireService: IQuestionnaire = {
     let insertRes: Questionnaire;
 
     try {
-      if (userId) {
-        insertRes = await QuestionnaireRepo.create(userId, questionnaire.title);
-
-        return insertRes;
-      } else {
-        throw new Error("Error: Failed to create group. No user logged in");
+      if (!userId) {
+        throw new ApolloError({ errorMessage: "Error: Failed to create questionnaire" });
       }
+
+      const { title } = questionnaire;
+
+      insertRes = await QuestionnaireRepo.create({ title, userId });
+
+      return insertRes;
     } catch (error) {
-      throw error;
+      throw new ApolloError({ errorMessage: "Error: Failed to create questionnaire" });
     }
   },
 };
