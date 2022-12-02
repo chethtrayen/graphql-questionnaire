@@ -15,12 +15,14 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@config": ["src/config/index.ts"],
+      "@config": ["src/config/index"],
       "@context": ["src/app/graphql/context"],
+      "@jwtService": ["src/app/auth/jwt.service"],
       "@modules/*": ["src/app/modules/*"],
-      "@prismaClient": ["src/prisma-client.ts"],
-      "@testUtils": ["test/utils/index.ts"],
-      "@type": ["src/types/index.ts"]
+      "@prismaClient": ["src/prisma-client"],
+      "@testHelpers": ["test/helpers/index"],
+      "@testUtils": ["test/utils/index"],
+      "@type": ["src/types/index"]
     },
     "rootDirs": ["src", "tests"]
   }

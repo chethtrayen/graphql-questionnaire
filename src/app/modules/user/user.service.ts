@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client/errors";
 import { IUser } from "@type";
-import { JwtService } from "../../auth/jwt.service";
+import { JwtService } from "@jwtService";
 
 import UserRepo from "./user.repo";
 
