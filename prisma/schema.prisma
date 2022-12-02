@@ -19,8 +19,8 @@ model User {
 
 model Questionnaire{
   id       Int                 @id @default(autoincrement())
-  owner    User                @relation(fields: [owner_id], references: [id])
-  owner_id Int      
+  owner    User                @relation(fields: [ownerId], references: [id])
+  ownerId Int                  @map("owner_id")
   status   QuestionnaireStatus @default(DRAFT)
   title    String
 }

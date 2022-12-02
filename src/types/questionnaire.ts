@@ -1,9 +1,9 @@
 import { Context } from "./context";
 
 export enum QuestionnaireStatus  {
-  DRAFT,
-  PUBLISH,
-  ARCHIVE
+  DRAFT = "DRAFT",
+  PUBLISH = "PUBLISH",
+  ARCHIVE = "ARCHIVE"
 }
 
 export type Questionnaire = {
