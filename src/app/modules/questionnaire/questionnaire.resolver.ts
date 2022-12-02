@@ -1,6 +1,7 @@
 import { ApolloError } from "@apollo/client/errors";
 import { Context, Questionnaire, QuestionnaireEditable } from "@type";
-import questionnaireService from "./questionnaires.service";
+
+import QuestionnaireService from "./questionnaires.service";
 
 export default {
   Mutation: {
@@ -9,7 +10,7 @@ export default {
       args: QuestionnaireEditable,
       context: Context
     ): Promise<Questionnaire | ApolloError> => {
-      return await questionnaireService.create(args, context.user?.id);
+      return await QuestionnaireService.create(args, context.user?.id);
     },
   },
 };
