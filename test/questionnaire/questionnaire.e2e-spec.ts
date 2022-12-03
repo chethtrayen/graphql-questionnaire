@@ -47,6 +47,24 @@ describe("Questionnaire", () => {
     await server.stop();
   });
 
+  describe("GET /questionnare/", () => {
+    it("should successfully create questionnaire", async () => {
+      const query = `
+         {getQuestionnaires {id, ownerId, status, title}}
+      `;
+      const res = await request(httpServer)
+        .get("/graphql")
+        .query({ query })
+        .set("Authorization", "Bearer " + testerTkn);
+
+      const { getQuestionnaires } = res.body.data;
+
+      expect(res.statusCode).toBe(200);
+      expect(getQuestionnaires.length).toBeGreaterThan(0);
+      expect(getQuestionnaires[0]).toEqual(expect.objectContaining(questionnaireSchemaValidation));
+    });
+  });
+
   describe("POST /questionnare/create", () => {
     const variables = { title: "foo@bar.com" };
 
