@@ -22,7 +22,7 @@ describe("Questionnaire", () => {
     it("should create and return questionnaire", async () => {
       jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
 
-      const res: Questionnaire | Error = await questionnaireService.create({ title: mockQuestionnaire.title }, mockQuestionnaire.ownerId);
+      const res: Questionnaire | Error = await questionnaireService.create({ title: mockQuestionnaire.title }, undefined, mockQuestionnaire.ownerId);
 
       expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mockQuestionnaire);

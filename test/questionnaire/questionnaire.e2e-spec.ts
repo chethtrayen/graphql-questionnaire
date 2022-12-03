@@ -106,18 +106,18 @@ describe("Questionnaire", () => {
   });
 
   describe("POST /questionnare/create", () => {
-    const variables = { title: "foo@bar.com" };
+    const questionnaire = { title: "foo@bar.com" };
 
     it("should successfully create questionnaire", async () => {
       const queryData = {
         query: `
-          mutation create($title: String!) 
+          mutation create($questionnaire: QuestionnaireWritable!) 
           {
-            createQuestionnaire(title: $title) 
+            createQuestionnaire(questionnaire: $questionnaire) 
             {id, ownerId, status, title}
           }
         `,
-        variables,
+        variables: { questionnaire },
       };
 
       const res = await request(httpServer)
@@ -126,9 +126,10 @@ describe("Questionnaire", () => {
         .send(queryData);
 
       const { createQuestionnaire } = res.body.data;
+
       expect(res.statusCode).toBe(200);
       expect(createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
-      expect(createQuestionnaire.title).toEqual(variables.title);
+      expect(createQuestionnaire.title).toEqual(questionnaire.title);
     });
   });
 
@@ -198,7 +199,7 @@ describe("Questionnaire", () => {
       const id = testerData.questionnaires[0].id;
       const queryData = {
         query: `
-          mutation update($id: Int!, $updated: QuestionnaireEditable!)
+          mutation update($id: Int!, $updated: QuestionnaireWritable!)
           {
             updateQuestionnaire(id: $id, updated: $updated) 
             {id, ownerId, status, title}
@@ -224,7 +225,7 @@ describe("Questionnaire", () => {
 
       const queryData = {
         query: `
-          mutation update($id: Int!, $updated: QuestionnaireEditable!)
+          mutation update($id: Int!, $updated: QuestionnaireWritable!)
           {
             updateQuestionnaire(id: $id, updated: $updated) 
             {id, ownerId, status, title}

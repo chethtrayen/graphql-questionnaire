@@ -1,7 +1,7 @@
 import prisma from "@prismaClient";
-import { Questionnaire, QuestionEditable, QuestionnaireEditable, QuestionnaireStatus } from "@type";
+import { Questionnaire, QuestionWritable, QuestionnaireWritable, QuestionnaireStatus } from "@type";
 
-export const create = async (questionnaire: QuestionnaireEditable, userId: number): Promise<Questionnaire> => {
+export const create = async (questionnaire: QuestionnaireWritable, userId: number): Promise<Questionnaire> => {
   const insertRes: Questionnaire = (await prisma.questionnaire.create({
     data: {
       ...questionnaire,
@@ -13,8 +13,8 @@ export const create = async (questionnaire: QuestionnaireEditable, userId: numbe
 };
 
 export const createWithQuestions = async (
-  questionnaire: QuestionnaireEditable,
-  questions: QuestionEditable[],
+  questionnaire: QuestionnaireWritable,
+  questions: QuestionWritable[],
   userId: number
 ): Promise<Questionnaire> => {
   const insertRes: Questionnaire = (await prisma.$transaction(async (tx) => {
@@ -78,7 +78,7 @@ export const publish = async (id: number): Promise<Questionnaire> => {
   return updateRes;
 };
 
-export const update = async ({ id, updated }: { id: number; updated: QuestionnaireEditable }): Promise<Questionnaire> => {
+export const update = async ({ id, updated }: { id: number; updated: QuestionnaireWritable }): Promise<Questionnaire> => {
   const updateRes: Questionnaire = (await prisma.questionnaire.update({
     where: {
       id,

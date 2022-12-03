@@ -1,12 +1,12 @@
 import { ApolloError } from "@apollo/client/errors";
 import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import { validate, validator } from "@helpers/validation";
-import { APIResponse, IQuestionnaire, QuestionEditable, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse } from "@type";
+import { APIResponse, IQuestionnaire, QuestionWritable, Questionnaire, QuestionnaireWritable, QuestionnairePublishResponse } from "@type";
 
 import * as QuestionnaireRepo from "./questionnaire.repo";
 
 const QuestionnaireService: IQuestionnaire = {
-  create: async (questionnaire: QuestionnaireEditable, questions: QuestionEditable[] | undefined, userId: number): APIResponse<Questionnaire> => {
+  create: async (questionnaire: QuestionnaireWritable, questions: QuestionWritable[] | undefined, userId: number): APIResponse<Questionnaire> => {
     let insertRes: Questionnaire;
 
     try {
@@ -67,7 +67,7 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
-  update: async (id: number, updated: QuestionnaireEditable, userId: number): APIResponse<Questionnaire> => {
+  update: async (id: number, updated: QuestionnaireWritable, userId: number): APIResponse<Questionnaire> => {
     try {
       const isValid = await validator([validate.questionnaireOwnership(id, userId)]);
 

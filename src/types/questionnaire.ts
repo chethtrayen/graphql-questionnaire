@@ -11,7 +11,7 @@ export interface Questionnaire extends BaseQuestionnaire {
   questions?: Question[];
 }
 
-export type QuestionnaireEditable = Omit<BaseQuestionnaire, "id" | "ownerId" | "status">;
+export type QuestionnaireWritable = Omit<BaseQuestionnaire, "id" | "ownerId" | "status">;
 
 export interface IQuestionnaire {
   /**
@@ -20,7 +20,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireEditable, questions: Question[] | undefined, userId: number | undefined): APIResponse<Questionnaire>;
+  create(questionnaire: QuestionnaireWritable, questions: Question[] | undefined, userId: number | undefined): APIResponse<Questionnaire>;
 
   /**
    * Get published questionnaire
@@ -49,8 +49,8 @@ export interface IQuestionnaire {
    * (Owner only) update questionnaire
    *
    * @param id questionnaire id
-   * @param update editable data
+   * @param update Writable data
    */
 
-  update(id: number, updated: QuestionnaireEditable, userId: number | undefined): APIResponse<Questionnaire>;
+  update(id: number, updated: QuestionnaireWritable, userId: number | undefined): APIResponse<Questionnaire>;
 }

@@ -13,7 +13,7 @@ export type BaseQuestion = {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Question extends BaseQuestion {}
 
-export type QuestionEditable = Omit<BaseQuestion, "id" | "ownerId" | "questionnaireId">;
+export type QuestionWritable = Omit<BaseQuestion, "id" | "ownerId" | "questionnaireId">;
 
 export interface IQuestion {
   /**
@@ -22,7 +22,7 @@ export interface IQuestion {
    * @param questionnaireId questionnaire id
    * @param questions question create data
    */
-  create(questionnaireId: number, questions: QuestionEditable[], userId: number): APIResponse<Question[]>;
+  create(questionnaireId: number, questions: QuestionWritable[], userId: number): APIResponse<Question[]>;
 
   // /**
   //  * (Owner only) delete question
@@ -42,7 +42,7 @@ export interface IQuestion {
   //  * (Owner only) update question
   //  *
   //  * @param id question id
-  //  * @param update editable data
+  //  * @param update Writable data
   //  */
-  // update(id: number, update: QuestionEditable): Promise<boolean>;
+  // update(id: number, update: QuestionWritable): Promise<boolean>;
 }
