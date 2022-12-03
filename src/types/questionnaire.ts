@@ -13,15 +13,20 @@ export type Questionnaire = {
   title: string;
 };
 
+export type QuestionnaireCreate = {
+  inserted: QuestionnaireEditable;
+};
+
 export type QuestionnaireEditable = Omit<Questionnaire, "id" | "ownerId" | "status">;
+
+export type QuestionnairePublishResponse = {
+  questionnaire: Questionnaire;
+  url: string;
+};
 
 export type QuestionnaireUpdate = {
   id: number;
   updated: QuestionnaireEditable;
-};
-
-export type QuestionnaireCreate = {
-  inserted: QuestionnaireEditable;
 };
 
 export interface IQuestionnaire {
@@ -59,7 +64,7 @@ export interface IQuestionnaire {
    *
    * @param id questionnaire id
    */
-  publish(id: number, userId: number): Promise<string | ApolloError>;
+  publish(id: number, userId: number): Promise<QuestionnairePublishResponse | ApolloError>;
 
   // /**
   //  * (Owner only) update questionnaire

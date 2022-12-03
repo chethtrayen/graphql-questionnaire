@@ -22,19 +22,21 @@ export const getByOwner = async (ownerId: number): Promise<Questionnaire[]> => {
   return questionnaires;
 };
 
-export const publish = async (id: number): Promise<void> => {
-  await prisma.questionnaire.update({
+export const publish = async (id: number): Promise<Questionnaire> => {
+  const updateRes: Questionnaire = (await prisma.questionnaire.update({
     where: {
       id,
     },
     data: {
       status: QuestionnaireStatus.PUBLISH,
     },
-  });
+  })) as unknown as Questionnaire;
+
+  return updateRes;
 };
 
 export const update = async ({ id, updated }: { id: number; updated: QuestionnaireEditable }): Promise<Questionnaire> => {
-  const updateRes = (await prisma.questionnaire.update({
+  const updateRes: Questionnaire = (await prisma.questionnaire.update({
     where: {
       id,
     },

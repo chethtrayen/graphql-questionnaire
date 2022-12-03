@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ApolloError } from "@apollo/client/errors";
-import { Context, Questionnaire, QuestionnaireEditable, QuestionnaireUpdate } from "@type";
+import { Context, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdate } from "@type";
 
 import QuestionnaireService from "./questionnaires.service";
 
@@ -16,7 +16,7 @@ export default {
       return await QuestionnaireService.create(args, context.user!.id);
     },
 
-    publishQuestionnaire: async (_: never, args: { id: number }, context: Context): Promise<string | ApolloError> => {
+    publishQuestionnaire: async (_: never, args: { id: number }, context: Context): Promise<QuestionnairePublishResponse | ApolloError> => {
       return await QuestionnaireService.publish(args.id, context.user!.id);
     },
 

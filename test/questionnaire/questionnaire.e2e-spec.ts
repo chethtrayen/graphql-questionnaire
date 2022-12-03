@@ -3,16 +3,11 @@ import express from "express";
 import http from "http";
 import request from "supertest";
 
+import config from "@config";
 import { getGraphQLContext } from "@context";
-import { getTesterData, getTesterTkn } from "@testHelpers";
+import { getTesterData, getTesterTkn, questionnaireSchemaValidation } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
-
-const questionnaireSchemaValidation = {
-  id: expect.any(Number),
-  ownerId: expect.any(Number),
-  status: expect.any(String),
-  title: expect.any(String),
-};
+import { QuestionnaireStatus } from "@prisma/client";
 
 describe("Questionnaire", () => {
   let app: express.Application;
@@ -89,6 +84,63 @@ describe("Questionnaire", () => {
       expect(res.statusCode).toBe(200);
       expect(createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
       expect(createQuestionnaire.title).toEqual(variables.title);
+    });
+  });
+
+  describe("POST /questionnare/publish", () => {
+    it("should successfully update questionnaire", async () => {
+      const id = testerData.questionnaires[0].id;
+
+      const queryData = {
+        query: `
+          mutation publish($id: Int!)
+          {
+            publishQuestionnaire(id: $id)
+            {questionnaire {id, ownerId, status, title}, url}
+          }
+        `,
+        variables: { id },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + testerTkn)
+        .send(queryData);
+
+      const { questionnaire, url } = res.body.data.publishQuestionnaire;
+
+      expect(res.statusCode).toBe(200);
+      expect(questionnaire).toEqual(questionnaireSchemaValidation);
+      expect(questionnaire.status).toEqual(QuestionnaireStatus.PUBLISH);
+
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      expect(url).toEqual(`http://${config.http.host}:${config.http.port}?qid=${id}`);
+    });
+
+    it("should return an error from validation", async () => {
+      const id = testerData.questionnaires[0].id;
+
+      const queryData = {
+        query: `
+          mutation publish($id: Int!) 
+          {
+            publishQuestionnaire(id: $id)
+            {questionnaire {id, ownerId, status, title}, url}
+          }
+        `,
+        variables: { id },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + negativeTesterTkn)
+        .send(queryData);
+
+      const { errors } = res.body;
+
+      expect(res.statusCode).toBe(200);
+      expect(errors.length).toEqual(1);
+      expect(errors[0].message).toEqual("Error: Failed to publish questionniare");
     });
   });
 

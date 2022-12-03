@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client/errors";
 import config from "@config";
 import { validate, validator } from "@helpers/validation";
-import { IQuestionnaire, Questionnaire, QuestionnaireEditable } from "@type";
+import { IQuestionnaire, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse } from "@type";
 
 import * as QuestionnaireRepo from "./questionnaire.repo";
 
@@ -28,7 +28,7 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
-  publish: async (id: number, userId: number): Promise<string | ApolloError> => {
+  publish: async (id: number, userId: number): Promise<QuestionnairePublishResponse | ApolloError> => {
     try {
       const isValid = await validator([validate.questionnaireOwnership(id, userId)]);
 
@@ -36,9 +36,12 @@ const QuestionnaireService: IQuestionnaire = {
         throw new ApolloError({ errorMessage: "Error: Failed to publish questionniare" });
       }
 
-      await QuestionnaireRepo.publish(id);
+      const updateRes = await QuestionnaireRepo.publish(id);
 
-      return `http://${config.http.host}:${config.http.port}?qid=${id}`;
+      return {
+        questionnaire: updateRes,
+        url: `http://${config.http.host}:${config.http.port}?qid=${id}`,
+      };
     } catch (error) {
       throw error;
     }

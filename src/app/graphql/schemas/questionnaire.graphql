@@ -5,6 +5,11 @@ type Questionnaire {
   title: String!
 }
 
+type QuestionnairePublish {
+  questionnaire: Questionnaire!
+  url: String!
+}
+
 enum QuestionnaireStatus {
   DRAFT
   PUBLISH
@@ -21,6 +26,6 @@ type Query {
 
 type Mutation {
   createQuestionnaire(title: String!): Questionnaire!
-  publishQuestionnaire(id: Int!): String!
+  publishQuestionnaire(id: Int!): QuestionnairePublish!
   updateQuestionnaire(id: Int!, updated: QuestionnaireEditable!): Questionnaire!
 }
