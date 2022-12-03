@@ -10,6 +10,7 @@ export default {
     "@jwtService": "<rootDir>/src/app/auth/jwt.service",
     "@modules/(.*)": "<rootDir>/src/app/modules/$1",
     "@prismaClient": "<rootDir>/src/prisma-client",
+    "@routes/(.*)": "<rootDir>/src/routes/$1",
     "@testHelpers": "<rootDir>/test/helpers/index",
     "@testUtils": "test/utils/index",
     "@type": "<rootDir>/src/types/index",

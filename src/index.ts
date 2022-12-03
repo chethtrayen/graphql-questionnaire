@@ -3,7 +3,7 @@ import express from "express";
 import http from "http";
 import { startGraphQLServer } from "./app/graphql/server";
 import config from "./config";
-import questionnaireRouter from "./routes/questionnaire";
+import questionnaireRouter from "@routes/questionnaire";
 
 async function main(): Promise<void> {
   // Create Express server

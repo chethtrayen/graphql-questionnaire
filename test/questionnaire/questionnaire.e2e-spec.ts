@@ -5,9 +5,10 @@ import request from "supertest";
 
 import config from "@config";
 import { getGraphQLContext } from "@context";
-import { getTesterData, getTesterTkn, questionnaireSchemaValidation } from "@testHelpers";
+import questionnaireRouter from "@routes/questionnaire";
+import { getTesterData, getTesterTkn, questionnaireSchemaValidation, updateQuestionnaireStatus } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
-import { QuestionnaireStatus } from "@prisma/client";
+import { QuestionnaireStatus } from "@type";
 
 describe("Questionnaire", () => {
   let app: express.Application;
@@ -29,6 +30,9 @@ describe("Questionnaire", () => {
 
     app = express();
     httpServer = http.createServer(app);
+
+    app.use("/questionnaire", questionnaireRouter);
+
     server = new ApolloServer({
       typeDefs,
       resolvers,
@@ -57,6 +61,47 @@ describe("Questionnaire", () => {
       expect(res.statusCode).toBe(200);
       expect(getQuestionnaires.length).toBeGreaterThan(0);
       expect(getQuestionnaires[0]).toEqual(expect.objectContaining(questionnaireSchemaValidation));
+    });
+  });
+
+  describe("GET /questionnare/published", () => {
+    it("should successfully update questionnaire", async () => {
+      const id = testerData.questionnaires[0].id;
+
+      // Update questionnaire status to publish
+      await updateQuestionnaireStatus(id, QuestionnaireStatus.PUBLISH);
+
+      const query = {
+        qid: id,
+      };
+
+      const res = await request(httpServer).get("/questionnaire/published").query(query);
+
+      const { questionnaire, success } = res.body;
+
+      expect(res.statusCode).toBe(200);
+      expect(questionnaire).toEqual(questionnaireSchemaValidation);
+      expect(questionnaire.status).toEqual(QuestionnaireStatus.PUBLISH);
+      expect(success).toBeTruthy();
+    });
+
+    it("should return an error for status", async () => {
+      const id = testerData.questionnaires[0].id;
+
+      // Update questionnaire status to publish
+      await updateQuestionnaireStatus(id, QuestionnaireStatus.DRAFT);
+
+      const query = {
+        qid: id,
+      };
+
+      const res = await request(httpServer).get("/questionnaire/published").query(query);
+
+      const { msg, success } = res.body;
+
+      expect(res.statusCode).toBe(200);
+      expect(msg).toEqual("Error: Failed to get questionnaire");
+      expect(success).toBeFalsy();
     });
   });
 

@@ -21,6 +21,7 @@
       "@jwtService": ["src/app/auth/jwt.service"],
       "@modules/*": ["src/app/modules/*"],
       "@prismaClient": ["src/prisma-client"],
+      "@routes/*": ["src/routes/*"],
       "@testHelpers": ["test/helpers/index"],
       "@testUtils": ["test/utils/index"],
       "@type": ["src/types/index"]
