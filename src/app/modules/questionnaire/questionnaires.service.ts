@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client/errors";
-import config from "@config";
+import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import { validate, validator } from "@helpers/validation";
 import { APIResponse, IQuestionnaire, QuestionEditable, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse } from "@type";
 
@@ -56,10 +56,11 @@ const QuestionnaireService: IQuestionnaire = {
       }
 
       const updateRes = await QuestionnaireRepo.publish(id);
+      const url = generatePublishQuestionniareUrl(id);
 
       return {
         questionnaire: updateRes,
-        url: `http://${config.http.host}:${config.http.port}?qid=${id}`,
+        url,
       };
     } catch (error) {
       throw error;

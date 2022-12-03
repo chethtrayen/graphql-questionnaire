@@ -1,4 +1,4 @@
-import config from "@config";
+import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import * as validation from "@helpers/validation";
 import questionnaireService from "@modules/questionnaire/questionnaires.service";
 import prisma from "@prismaClient";
@@ -70,11 +70,12 @@ describe("Questionnaire", () => {
         mockQuestionnaire.id,
         mockQuestionnaire.ownerId
       )) as unknown as QuestionnairePublishResponse;
+      const expectedUrl = generatePublishQuestionniareUrl(mockQuestionnaire.id);
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
       expect(res.questionnaire).toMatchObject(mockQuestionnaire);
-      expect(res.url).toEqual(`http://${config.http.host}:${config.http.port}?qid=${mockQuestionnaire.id}`);
+      expect(res.url).toEqual(expectedUrl);
     });
 
     it("should return an error from validation", async () => {

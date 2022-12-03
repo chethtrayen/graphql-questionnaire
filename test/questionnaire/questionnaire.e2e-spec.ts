@@ -3,8 +3,8 @@ import express from "express";
 import http from "http";
 import request from "supertest";
 
-import config from "@config";
 import { getGraphQLContext } from "@context";
+import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import questionnaireRouter from "@routes/questionnaire";
 import { getTesterData, getTesterTkn, questionnaireSchemaValidation, updateQuestionnaireStatus } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
@@ -153,13 +153,14 @@ describe("Questionnaire", () => {
         .send(queryData);
 
       const { questionnaire, url } = res.body.data.publishQuestionnaire;
+      const expectedUrl = generatePublishQuestionniareUrl(id);
 
       expect(res.statusCode).toBe(200);
       expect(questionnaire).toEqual(questionnaireSchemaValidation);
       expect(questionnaire.status).toEqual(QuestionnaireStatus.PUBLISH);
 
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      expect(url).toEqual(`http://${config.http.host}:${config.http.port}?qid=${id}`);
+      expect(url).toEqual(expectedUrl);
     });
 
     it("should return an error from validation", async () => {
