@@ -42,18 +42,15 @@ describe("Questionnaire", () => {
   });
 
   describe("publish", () => {
-    const id = 1;
-    const userId = 1;
-
     it("should publish and return a url", async () => {
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
 
-      const res: string | Error = (await questionnaireService.publish(id, userId)) as unknown as string;
+      const res: string | Error = (await questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)) as unknown as string;
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
-      expect(res).toEqual(`http://${config.http.host}:${config.http.port}?qid=${id}`);
+      expect(res).toEqual(`http://${config.http.host}:${config.http.port}?qid=${mockQuestionnaire.id}`);
     });
 
     it("should return an error from validation", () => {
@@ -61,7 +58,7 @@ describe("Questionnaire", () => {
       jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
-      expect(() => questionnaireService.publish(id, userId)).rejects.toThrow("Error: Failed to publish questionniare");
+      expect(() => questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)).rejects.toThrow("Error: Failed to publish questionniare");
     });
   });
 
@@ -70,7 +67,7 @@ describe("Questionnaire", () => {
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
 
-      const res: Questionnaire | Error = await questionnaireService.update(mockQuestionnaire.id, { title: "test" }, 1);
+      const res: Questionnaire | Error = await questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId);
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
