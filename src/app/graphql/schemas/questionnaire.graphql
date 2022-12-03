@@ -6,11 +6,16 @@ type Questionnaire {
 }
 
 enum QuestionnaireStatus {
-  DRAFT,
-  PUBLISH,
+  DRAFT
+  PUBLISH
   ARCHIVE
 }
 
-type Mutation{ 
-  createQuestionnaire (title: String!) : Questionnaire!
+input QuestionnaireEditable {
+  title: String!
+}
+
+type Mutation {
+  createQuestionnaire(title: String!): Questionnaire!
+  updateQuestionnaire(id: Int!, updated: QuestionnaireEditable!): Questionnaire!
 }

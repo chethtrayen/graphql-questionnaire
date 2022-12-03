@@ -1,7 +1,7 @@
 import prisma from "@prismaClient";
-import { Questionnaire } from "@type";
+import { Questionnaire, QuestionnaireEditable } from "@type";
 
-const create = async ({
+export const create = async ({
   title,
   userId,
 }: {
@@ -18,8 +18,19 @@ const create = async ({
   return insertRes;
 };
 
-const QuestionnaireRepo = {
-  create,
-};
+export const update = async ({
+  id,
+  updated,
+}: {
+  id: number;
+  updated: QuestionnaireEditable;
+}): Promise<Questionnaire> => {
+  const updateRes = (await prisma.questionnaire.update({
+    where: {
+      id,
+    },
+    data: updated,
+  })) as unknown as Questionnaire;
 
-export default QuestionnaireRepo;
+  return updateRes;
+};

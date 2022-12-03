@@ -15,6 +15,15 @@ export type Questionnaire = {
 
 export type QuestionnaireEditable = Omit<Questionnaire, "id" | "ownerId" | "status">;
 
+export type QuestionnaireUpdate = {
+  id: number;
+  updated: QuestionnaireEditable;
+};
+
+export type QuestionnaireCreate = {
+  inserted: QuestionnaireEditable;
+};
+
 export interface IQuestionnaire {
   /**
    * Create questionnaire
@@ -61,5 +70,9 @@ export interface IQuestionnaire {
   //  * @param id questionnaire id
   //  * @param update editable data
   //  */
-  // update(id: number, updates: QuestionnaireEditable): Promise<boolean>;
+  update(
+    id: number,
+    updates: QuestionnaireEditable,
+    userId: number | undefined
+  ): Promise<Questionnaire | ApolloError>;
 }

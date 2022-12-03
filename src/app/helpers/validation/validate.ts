@@ -6,10 +6,11 @@ export const questionnaireOwnership = async (
 ): Promise<boolean> => {
   const result = await prisma.questionnaire.findFirst({
     where: {
-      id: questionnaireId,
-      ownerId: userId,
+      AND: [{ id: questionnaireId }, { ownerId: userId }],
     },
   });
+
+  console.log({ result, userId });
 
   return Boolean(result);
 };
