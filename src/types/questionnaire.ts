@@ -1,10 +1,5 @@
 import { ApolloError } from "@apollo/client/errors";
-
-export enum QuestionnaireStatus {
-  DRAFT = "DRAFT",
-  PUBLISH = "PUBLISH",
-  ARCHIVE = "ARCHIVE",
-}
+import { QuestionnaireStatus } from "@type";
 
 export type Questionnaire = {
   id: number;

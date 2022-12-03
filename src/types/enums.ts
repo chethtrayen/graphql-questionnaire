@@ -1,0 +1,13 @@
+export enum QuestionType {
+  SHORT_ANSWER = "SHORT_ANSWER",
+  PARAGRAPH = "PARAGRAPH",
+  CHECKBOXES = "CHECKBOXES",
+  MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+  DROPDOWN = "DROPDOWN",
+}
+
+export enum QuestionnaireStatus {
+  DRAFT = "DRAFT",
+  PUBLISH = "PUBLISH",
+  ARCHIVE = "ARCHIVE",
+}

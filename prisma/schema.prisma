@@ -11,23 +11,47 @@ datasource db {
 
 // Placeholder, please remove or replace.
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  name           String?
-  questionnaires Questionnaire[]
-}
-
-model Questionnaire{
-  id       Int                 @id @default(autoincrement())
-  owner    User                @relation(fields: [ownerId], references: [id])
-  ownerId Int                  @map("owner_id")
-  status   QuestionnaireStatus @default(DRAFT)
-  title    String
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  name            String?
+  questionnaires  Questionnaire[]
+  questions       Question[]
 }
 
 enum QuestionnaireStatus{
   DRAFT
   PUBLISH
   ARCHIVE
+}
+
+
+model Questionnaire{
+  id          Int                     @id @default(autoincrement())
+  owner       User                    @relation(fields: [ownerId], references: [id])
+  ownerId     Int                     @map("owner_id")
+  status      QuestionnaireStatus     @default(DRAFT)
+  title       String
+  questions   Question[]
+}
+
+
+enum QuestionType {
+  SHORT_ANSWER
+  PARAGRAPH 
+  CHECKBOXES 
+  MULTIPLE_CHOICE
+  DROPDOWN 
+}
+
+model Question{
+  id                Int                   @id @default(autoincrement())
+  owner             User                  @relation(fields: [ownerId], references: [id])
+  ownerId           Int                   @map("owner_id")
+  questionnaire     Questionnaire         @relation(fields: [questionnaireId], references: [id])
+  questionnaireId   Int
+  label             String
+  order             Int                   @default(0)
+  type              QuestionType
+  answers           String[]
 }
 
