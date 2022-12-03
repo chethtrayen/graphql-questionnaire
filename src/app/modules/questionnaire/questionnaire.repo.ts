@@ -27,6 +27,13 @@ export const getByOwner = async (ownerId: number): Promise<Questionnaire[]> => {
     where: {
       ownerId,
     },
+    include: {
+      questions: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
   })) as unknown as Questionnaire[];
 
   return questionnaires;
@@ -39,6 +46,13 @@ export const publish = async (id: number): Promise<Questionnaire> => {
     },
     data: {
       status: QuestionnaireStatus.PUBLISH,
+    },
+    include: {
+      questions: {
+        orderBy: {
+          order: "asc",
+        },
+      },
     },
   })) as unknown as Questionnaire;
 

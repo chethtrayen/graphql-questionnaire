@@ -1,8 +1,27 @@
+enum QuestionType {
+  SHORT_ANSWER
+  PARAGRAPH
+  CHECKBOXES
+  MULTIPLE_CHOICE
+  DROPDOWN
+}
+
+type Question {
+  id: Int!
+  ownerId: Int!
+  questionnaireId: Int!
+  label: String!
+  order: Int!
+  type: QuestionType!
+  answers: [String]!
+}
+
 type Questionnaire {
   id: Int!
   ownerId: Int!
   status: QuestionnaireStatus!
   title: String!
+  questions: [Question]
 }
 
 type QuestionnairePublish {
