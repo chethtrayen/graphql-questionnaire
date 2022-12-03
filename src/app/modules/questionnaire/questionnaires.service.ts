@@ -1,4 +1,5 @@
 import { ApolloError } from "@apollo/client/errors";
+import config from "@config";
 import { validate, validator } from "@helpers/validation";
 import { IQuestionnaire, Questionnaire, QuestionnaireEditable } from "@type";
 
@@ -24,6 +25,22 @@ const QuestionnaireService: IQuestionnaire = {
       return await QuestionnaireRepo.getByOwner(userId);
     } catch (error) {
       throw new ApolloError({ errorMessage: "Error: Failed to get Questionnaires" });
+    }
+  },
+
+  publish: async (id: number, userId: number): Promise<string | ApolloError> => {
+    try {
+      const isValid = await validator([validate.questionnaireOwnership(id, userId)]);
+
+      if (!isValid) {
+        throw new ApolloError({ errorMessage: "Error: Failed to publish questionniare" });
+      }
+
+      await QuestionnaireRepo.publish(id);
+
+      return `http://${config.http.host}:${config.http.port}?qid=${id}`;
+    } catch (error) {
+      throw error;
     }
   },
 

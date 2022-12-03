@@ -16,6 +16,10 @@ export default {
       return await QuestionnaireService.create(args, context.user!.id);
     },
 
+    publishQuestionnaire: async (_: never, args: { id: number }, context: Context): Promise<string | ApolloError> => {
+      return await QuestionnaireService.publish(args.id, context.user!.id);
+    },
+
     updateQuestionnaire: async (_: never, args: QuestionnaireUpdate, context: Context): Promise<Questionnaire | ApolloError> => {
       return await QuestionnaireService.update(args.id, args.updated, context.user!.id);
     },

@@ -54,12 +54,12 @@ export interface IQuestionnaire {
    */
   getByOwner(userId: number): Promise<Questionnaire[] | ApolloError>;
 
-  // /**
-  //  * (Owner only) publish questionnaire
-  //  *
-  //  * @param id questionnaire id
-  //  */
-  // publish(id: number): Promise<string>;
+  /**
+   * (Owner only) publish questionnaire
+   *
+   * @param id questionnaire id
+   */
+  publish(id: number, userId: number): Promise<string | ApolloError>;
 
   // /**
   //  * (Owner only) update questionnaire
