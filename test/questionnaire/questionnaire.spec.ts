@@ -24,6 +24,18 @@ describe("Questionnaire unit test", () => {
     });
   });
 
+  describe("Get by owner", () => {
+    it("should return owner's questionnaires", async () => {
+      jest.spyOn(prisma.questionnaire, "findMany").mockResolvedValueOnce([mockQuestionnaire]);
+
+      const res: Questionnaire[] | Error = (await questionnaireService.getByOwner(1)) as unknown as Questionnaire[];
+
+      expect(prisma.questionnaire.findMany).toHaveBeenCalledTimes(1);
+      expect(res.length).toEqual(1);
+      expect(res).toMatchObject([mockQuestionnaire]);
+    });
+  });
+
   describe("Update", () => {
     it("should update questionnaire", async () => {
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
