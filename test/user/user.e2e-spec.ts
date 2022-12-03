@@ -3,7 +3,7 @@ import express from "express";
 import http from "http";
 import request from "supertest";
 
-import {resolvers, typeDefs} from '@testUtils'
+import { resolvers, typeDefs } from "@testUtils";
 
 describe("User e2e login", () => {
   let app: express.Application;
@@ -35,11 +35,13 @@ describe("User e2e login", () => {
       };
 
       const response = await request(httpServer).post("/graphql").send(queryData);
-      
+
       expect(response.statusCode).toBe(200);
-      expect(response.body.data).toEqual(expect.objectContaining({
-        login: expect.any(String)
-      }));
+      expect(response.body.data).toEqual(
+        expect.objectContaining({
+          login: expect.any(String),
+        })
+      );
     });
   });
 });

@@ -35,4 +35,4 @@ export const JwtService = {
       throw err;
     }
   },
-}
+};

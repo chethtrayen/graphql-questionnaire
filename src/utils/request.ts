@@ -8,5 +8,5 @@ export const RequestUtils: RequestUtilsInterface<express.Request> = {
       return null;
     }
     return header.replace("Bearer ", "");
-  }
-}
+  },
+};

@@ -36,7 +36,7 @@ export interface JwtService {
    * @param secret JWT secret
    * @param notBefore Not before time in seconds
    */
-  signWithNotBefore(payload: string | object | Buffer, secret: jwt.Secret, notBefore: number): string
+  signWithNotBefore(payload: string | object | Buffer, secret: jwt.Secret, notBefore: number): string;
 
   /**
    * Verify a JWT & return decoded payload if valid.

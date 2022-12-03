@@ -12,7 +12,7 @@ export type AppConfig = {
     port: number;
   };
   graphql: {
-    csrfPrevention: boolean,
+    csrfPrevention: boolean;
     introspectionEnabled: boolean;
   };
   auth: {

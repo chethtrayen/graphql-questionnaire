@@ -22,7 +22,7 @@ const config: AppConfig = {
   },
   auth: {
     jwtSecret: getenv("JWT_SECRET", "secret"),
-  }
+  },
 };
 
 export default { ...config };
