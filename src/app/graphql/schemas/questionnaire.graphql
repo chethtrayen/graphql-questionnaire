@@ -15,6 +15,10 @@ input QuestionnaireEditable {
   title: String!
 }
 
+type Query {
+  getQuestionnaires: [Questionnaire]
+}
+
 type Mutation {
   createQuestionnaire(title: String!): Questionnaire!
   updateQuestionnaire(id: Int!, updated: QuestionnaireEditable!): Questionnaire!

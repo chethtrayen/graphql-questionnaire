@@ -6,12 +6,9 @@ import { RequestUtils } from "../../utils/request";
 
 import { JwtService } from "../auth/jwt.service";
 
-const authQuery = ["createQuestionnaire", "updateQuestionnaire"];
+const authQuery = ["createQuestionnaire", "getQuestionnaires", "updateQuestionnaire"];
 
-export const getGraphQLContext = async ({
-  req,
-  res,
-}: ExpressContext): Promise<Context | AuthenticationError> => {
+export const getGraphQLContext = async ({ req, res }: ExpressContext): Promise<Context | AuthenticationError> => {
   let context: Context = {
     req,
     res,

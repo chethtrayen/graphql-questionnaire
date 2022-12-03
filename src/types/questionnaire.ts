@@ -31,10 +31,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(
-    questionnaire: QuestionnaireEditable,
-    userId: number | undefined
-  ): Promise<Questionnaire | ApolloError>;
+  create(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | ApolloError>;
 
   /**
    * (Owner only) delete questionnaire
@@ -51,11 +48,11 @@ export interface IQuestionnaire {
   //  */
   // getById(id: number): Promise<Questionnaire>;
 
-  // /**
-  //  * Get all user's questionnaires
-  //  *
-  // */
-  // getByUser(): Promise<Questionnaire>[];
+  /**
+   * Get all user's questionnaires
+   *
+   */
+  getByOwner(userId: number): Promise<Questionnaire[] | ApolloError>;
 
   // /**
   //  * (Owner only) publish questionnaire
@@ -70,9 +67,6 @@ export interface IQuestionnaire {
   //  * @param id questionnaire id
   //  * @param update editable data
   //  */
-  update(
-    id: number,
-    updated: QuestionnaireEditable,
-    userId: number | undefined
-  ): Promise<Questionnaire | ApolloError>;
+
+  update(id: number, updated: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | ApolloError>;
 }
