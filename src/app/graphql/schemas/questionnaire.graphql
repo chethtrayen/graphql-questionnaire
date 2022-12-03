@@ -1,19 +1,7 @@
-enum QuestionType {
-  SHORT_ANSWER
-  PARAGRAPH
-  CHECKBOXES
-  MULTIPLE_CHOICE
-  DROPDOWN
-}
-
-type Question {
-  id: Int!
-  ownerId: Int!
-  questionnaireId: Int!
-  label: String!
-  order: Int!
-  type: QuestionType!
-  answers: [String]!
+enum QuestionnaireStatus {
+  DRAFT
+  PUBLISH
+  ARCHIVE
 }
 
 type Questionnaire {
@@ -27,12 +15,6 @@ type Questionnaire {
 type QuestionnairePublish {
   questionnaire: Questionnaire!
   url: String!
-}
-
-enum QuestionnaireStatus {
-  DRAFT
-  PUBLISH
-  ARCHIVE
 }
 
 input QuestionnaireEditable {

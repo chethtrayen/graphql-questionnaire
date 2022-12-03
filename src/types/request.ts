@@ -1,4 +1,8 @@
-import { QuestionnaireEditable, Question } from "@type";
+import { QuestionEditable, QuestionnaireEditable, Question } from "@type";
+
+export interface RequestUtils<R> {
+  getTokenFromRequest(req: R): string | null;
+}
 
 export type QuestionnaireUpdateRequest = {
   id: number;
@@ -10,6 +14,7 @@ export type QuestionnaireCreateRequest = {
   questions?: Question[];
 };
 
-export interface RequestUtils<R> {
-  getTokenFromRequest(req: R): string | null;
-}
+export type QuestionCreateRequest = {
+  questionnaireId: number;
+  questions: QuestionEditable[];
+};

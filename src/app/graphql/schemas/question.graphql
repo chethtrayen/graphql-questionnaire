@@ -1,0 +1,28 @@
+enum QuestionType {
+  SHORT_ANSWER
+  PARAGRAPH
+  CHECKBOXES
+  MULTIPLE_CHOICE
+  DROPDOWN
+}
+
+type Question {
+  id: Int!
+  ownerId: Int!
+  questionnaireId: Int!
+  label: String!
+  order: Int!
+  type: QuestionType!
+  answers: [String]!
+}
+
+input QuestionEditable {
+  label: String!
+  order: Int
+  type: QuestionType!
+  answers: [String]
+}
+
+type Mutation {
+  createQuestion(questionnaireId: Int!, questions: [QuestionEditable]!): [Question]!
+}

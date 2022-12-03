@@ -1,4 +1,4 @@
-import { QuestionType } from "@type";
+import { APIResponse, QuestionType } from "@type";
 
 export type BaseQuestion = {
   answers: string[];
@@ -22,27 +22,27 @@ export interface IQuestion {
    * @param questionnaireId questionnaire id
    * @param questions question create data
    */
-  create(questionnaireId: number, questions: QuestionEditable[]): Promise<Question>;
+  create(questionnaireId: number, questions: QuestionEditable[], userId: number): APIResponse<Question[]>;
 
-  /**
-   * (Owner only) delete question
-   *
-   * @param id question id
-   */
-  delete(id: number): Promise<boolean>;
+  // /**
+  //  * (Owner only) delete question
+  //  *
+  //  * @param id question id
+  //  */
+  // delete(id: number): Promise<boolean>;
 
-  /**
-   * Get questions from questionnaire
-   *
-   * @param questionnaireId questionnaire id
-   */
-  getByQuestionnaire(questionnaireId: number): Promise<Question>[];
+  // /**
+  //  * Get questions from questionnaire
+  //  *
+  //  * @param questionnaireId questionnaire id
+  //  */
+  // getByQuestionnaire(questionnaireId: number): Promise<Question>[];
 
-  /**
-   * (Owner only) update question
-   *
-   * @param id question id
-   * @param update editable data
-   */
-  update(id: number, update: QuestionEditable): Promise<boolean>;
+  // /**
+  //  * (Owner only) update question
+  //  *
+  //  * @param id question id
+  //  * @param update editable data
+  //  */
+  // update(id: number, update: QuestionEditable): Promise<boolean>;
 }
