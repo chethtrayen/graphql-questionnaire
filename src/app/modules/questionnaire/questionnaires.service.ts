@@ -20,6 +20,14 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
+  getByOwner: async (userId: number): Promise<Questionnaire[] | ApolloError> => {
+    try {
+      return await QuestionnaireRepo.getByOwner(userId);
+    } catch (error) {
+      throw new ApolloError({ errorMessage: "Error: Failed to get Questionnaires" });
+    }
+  },
+
   getPublishById: async (id: number): Promise<Questionnaire | ApolloError> => {
     try {
       const questionnaire: Questionnaire | undefined = await QuestionnaireRepo.getPublishById(id);
@@ -31,14 +39,6 @@ const QuestionnaireService: IQuestionnaire = {
       throw new ApolloError({ errorMessage: "Error: Failed to get questionnaire" });
     } catch (error) {
       throw error;
-    }
-  },
-
-  getByOwner: async (userId: number): Promise<Questionnaire[] | ApolloError> => {
-    try {
-      return await QuestionnaireRepo.getByOwner(userId);
-    } catch (error) {
-      throw new ApolloError({ errorMessage: "Error: Failed to get Questionnaires" });
     }
   },
 
