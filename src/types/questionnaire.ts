@@ -1,27 +1,17 @@
-import { APIResponse, QuestionnaireStatus } from "@type";
+import { APIResponse, Question, QuestionnairePublishResponse, QuestionnaireStatus } from "@type";
 
-export type Questionnaire = {
+export type BaseQuestionnaire = {
   id: number;
   ownerId: number;
   status: QuestionnaireStatus;
   title: string;
 };
 
-export type QuestionnaireCreate = {
-  inserted: QuestionnaireEditable;
-};
+export interface Questionnaire extends BaseQuestionnaire {
+  questions?: Question[];
+}
 
-export type QuestionnaireEditable = Omit<Questionnaire, "id" | "ownerId" | "status">;
-
-export type QuestionnairePublishResponse = {
-  questionnaire: Questionnaire;
-  url: string;
-};
-
-export type QuestionnaireUpdate = {
-  id: number;
-  updated: QuestionnaireEditable;
-};
+export type QuestionnaireEditable = Omit<BaseQuestionnaire, "id" | "ownerId" | "status">;
 
 export interface IQuestionnaire {
   /**

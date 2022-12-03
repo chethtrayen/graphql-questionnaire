@@ -1,6 +1,6 @@
 import { QuestionType } from "@type";
 
-export type Question = {
+export type BaseQuestion = {
   answers: string[];
   id: number;
   label: string;
@@ -10,16 +10,19 @@ export type Question = {
   type: QuestionType;
 };
 
-export type QuestionEditable = Omit<Question, "id" | "ownerId" | "questionnaireId">;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Question extends BaseQuestion {}
+
+export type QuestionEditable = Omit<BaseQuestion, "id" | "ownerId" | "questionnaireId">;
 
 export interface IQuestion {
   /**
    * Create question
    *
-   * @param questionaireId questionaire id
+   * @param questionnaireId questionnaire id
    * @param questions question create data
    */
-  create(questionaireId: number, questions: QuestionEditable[]): Promise<Question>;
+  create(questionnaireId: number, questions: QuestionEditable[]): Promise<Question>;
 
   /**
    * (Owner only) delete question
@@ -29,11 +32,11 @@ export interface IQuestion {
   delete(id: number): Promise<boolean>;
 
   /**
-   * Get questions from questionaire
+   * Get questions from questionnaire
    *
-   * @param questionaireId questionaire id
+   * @param questionnaireId questionnaire id
    */
-  getByQuestionnaire(questionaireId: number): Promise<Question>[];
+  getByQuestionnaire(questionnaireId: number): Promise<Question>[];
 
   /**
    * (Owner only) update question

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Context, APIResponse, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdate } from "@type";
+import { Context, APIResponse, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdateRequest } from "@type";
 
 import QuestionnaireService from "./questionnaires.service";
 
@@ -19,7 +19,7 @@ export default {
       return await QuestionnaireService.publish(args.id, context.user!.id);
     },
 
-    updateQuestionnaire: async (_: never, args: QuestionnaireUpdate, context: Context): APIResponse<Questionnaire> => {
+    updateQuestionnaire: async (_: never, args: QuestionnaireUpdateRequest, context: Context): APIResponse<Questionnaire> => {
       return await QuestionnaireService.update(args.id, args.updated, context.user!.id);
     },
   },
