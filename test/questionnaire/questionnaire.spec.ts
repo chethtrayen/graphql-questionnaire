@@ -66,7 +66,10 @@ describe("Questionnaire", () => {
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
 
-      const res: QuestionnairePublishResponse | Error = (await questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)) as unknown as QuestionnairePublishResponse;
+      const res: QuestionnairePublishResponse | Error = (await questionnaireService.publish(
+        mockQuestionnaire.id,
+        mockQuestionnaire.ownerId
+      )) as unknown as QuestionnairePublishResponse;
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
@@ -79,7 +82,9 @@ describe("Questionnaire", () => {
       jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
-      await expect(() => questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)).rejects.toThrow("Error: Failed to publish questionniare");
+      await expect(() => questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)).rejects.toThrow(
+        "Error: Failed to publish questionniare"
+      );
     });
   });
 
@@ -100,7 +105,9 @@ describe("Questionnaire", () => {
       //jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
-      await expect(() => questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId)).rejects.toThrow("Error: Failed to update questionniare");
+      await expect(() => questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId)).rejects.toThrow(
+        "Error: Failed to update questionniare"
+      );
     });
   });
 });
