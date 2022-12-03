@@ -14,24 +14,34 @@ describe("Questionnaire unit test", () => {
   };
 
   describe("Create", () => {
-    it("should return jwt token", async () => {
+    it("should create questionnaire", async () => {
       jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
 
       const res: Questionnaire | Error = await questionnaireService.create({ title: mockQuestionnaire.title }, mockQuestionnaire.ownerId);
+
       expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mockQuestionnaire);
     });
   });
 
   describe("Update", () => {
-    it("should return jwt token", async () => {
+    it("should update questionnaire", async () => {
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+
       const res: Questionnaire | Error = await questionnaireService.update(mockQuestionnaire.id, { title: "test" }, 1);
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mockQuestionnaire);
+    });
+
+    it("should fail to update questionnaire from validation", () => {
+      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
+
+      // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
+      expect(() => questionnaireService.update(mockQuestionnaire.id, { title: "test" }, 1)).rejects.toThrow("Error: Failed to update questionniare");
     });
   });
 });
