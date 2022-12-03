@@ -1,11 +1,11 @@
 import { ApolloError } from "@apollo/client/errors";
-import { IUser } from "@type";
+import { APIResponse, IUser } from "@type";
 import { JwtService } from "@jwtService";
 
 import UserRepo from "./user.repo";
 
 const UserService: IUser = {
-  login: async (email: string): Promise<string | ApolloError> => {
+  login: async (email: string): APIResponse<string> => {
     try {
       const user = await UserRepo.getByEmail(email);
 

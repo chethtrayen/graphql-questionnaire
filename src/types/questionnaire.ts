@@ -1,5 +1,4 @@
-import { ApolloError } from "@apollo/client/errors";
-import { QuestionnaireStatus } from "@type";
+import { APIResponse, QuestionnaireStatus } from "@type";
 
 export type Questionnaire = {
   id: number;
@@ -31,7 +30,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | ApolloError>;
+  create(questionnaire: QuestionnaireEditable, userId: number | undefined): APIResponse<Questionnaire>;
 
   /**
    * Get published questionnaire
@@ -39,14 +38,14 @@ export interface IQuestionnaire {
    * @param id questionnaire id
    */
 
-  getPublishById(id: number): Promise<Questionnaire | ApolloError>;
+  getPublishById(id: number): APIResponse<Questionnaire>;
 
   /**
    * Get all user's questionnaires
    *
    */
 
-  getByOwner(userId: number): Promise<Questionnaire[] | ApolloError>;
+  getByOwner(userId: number): APIResponse<Questionnaire[]>;
 
   /**
    * (Owner only) publish questionnaire
@@ -54,7 +53,7 @@ export interface IQuestionnaire {
    * @param id questionnaire id
    */
 
-  publish(id: number, userId: number): Promise<QuestionnairePublishResponse | ApolloError>;
+  publish(id: number, userId: number): APIResponse<QuestionnairePublishResponse>;
 
   /**
    * (Owner only) update questionnaire
@@ -63,5 +62,5 @@ export interface IQuestionnaire {
    * @param update editable data
    */
 
-  update(id: number, updated: QuestionnaireEditable, userId: number | undefined): Promise<Questionnaire | ApolloError>;
+  update(id: number, updated: QuestionnaireEditable, userId: number | undefined): APIResponse<Questionnaire>;
 }

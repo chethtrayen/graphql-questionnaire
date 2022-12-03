@@ -1,10 +1,10 @@
-import { ApolloError } from "@apollo/client/errors";
+import { APIResponse } from "@type";
 
 import UserService from "./user.service";
 
 export default {
   Query: {
-    login: async (_: never, { email }: { email: string }): Promise<string | ApolloError> => {
+    login: async (_: never, { email }: { email: string }): APIResponse<string> => {
       return await UserService.login(email);
     },
   },

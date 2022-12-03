@@ -1,26 +1,25 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { ApolloError } from "@apollo/client/errors";
-import { Context, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdate } from "@type";
+import { Context, APIResponse, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdate } from "@type";
 
 import QuestionnaireService from "./questionnaires.service";
 
 export default {
   Query: {
-    getQuestionnaires: async (_: never, __: never, context: Context): Promise<Questionnaire[] | ApolloError> => {
+    getQuestionnaires: async (_: never, __: never, context: Context): APIResponse<Questionnaire[]> => {
       return await QuestionnaireService.getByOwner(context.user!.id);
     },
   },
 
   Mutation: {
-    createQuestionnaire: async (_: never, args: QuestionnaireEditable, context: Context): Promise<Questionnaire | ApolloError> => {
+    createQuestionnaire: async (_: never, args: QuestionnaireEditable, context: Context): APIResponse<Questionnaire> => {
       return await QuestionnaireService.create(args, context.user!.id);
     },
 
-    publishQuestionnaire: async (_: never, args: { id: number }, context: Context): Promise<QuestionnairePublishResponse | ApolloError> => {
+    publishQuestionnaire: async (_: never, args: { id: number }, context: Context): APIResponse<QuestionnairePublishResponse> => {
       return await QuestionnaireService.publish(args.id, context.user!.id);
     },
 
-    updateQuestionnaire: async (_: never, args: QuestionnaireUpdate, context: Context): Promise<Questionnaire | ApolloError> => {
+    updateQuestionnaire: async (_: never, args: QuestionnaireUpdate, context: Context): APIResponse<Questionnaire> => {
       return await QuestionnaireService.update(args.id, args.updated, context.user!.id);
     },
   },
