@@ -6,6 +6,7 @@ export default {
   moduleNameMapper: {
     "@config": "<rootDir>/src/config/index",
     "@context": "<rootDir>/src/app/graphql/context",
+    "@helpers/(.*)": "<rootDir>src/app/helpers/$1",
     "@jwtService": "<rootDir>/src/app/auth/jwt.service",
     "@modules/(.*)": "<rootDir>/src/app/modules/$1",
     "@prismaClient": "<rootDir>/src/prisma-client",

@@ -1,6 +1,9 @@
+import * as validation from "@helpers/validation";
 import questionnaireService from "@modules/questionnaire/questionnaires.service";
 import prisma from "@prismaClient";
 import { Questionnaire, QuestionnaireStatus } from "@type";
+
+jest.mock("@helpers/validation");
 
 describe("Questionnaire unit test", () => {
   const mockQuestionnaire: Questionnaire = {
@@ -10,29 +13,25 @@ describe("Questionnaire unit test", () => {
     title: "foo bar",
   };
 
-  describe("Create questionnaire", () => {
-    describe("Successfully create questionnaire", () => {
-      it("should return jwt token", async () => {
-        jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
+  describe("Create", () => {
+    it("should return jwt token", async () => {
+      jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
 
-        const questionaires: Questionnaire | Error = await questionnaireService.create(
-          { title: mockQuestionnaire.title },
-          mockQuestionnaire.ownerId
-        );
-        expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
-        expect(questionaires).toMatchObject(mockQuestionnaire);
-      });
+      const res: Questionnaire | Error = await questionnaireService.create({ title: mockQuestionnaire.title }, mockQuestionnaire.ownerId);
+      expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
+      expect(res).toMatchObject(mockQuestionnaire);
     });
+  });
 
-    describe("UnSuccessful user login", () => {
-      it("should return an error", () => {
-        jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
+  describe("Update", () => {
+    it("should return jwt token", async () => {
+      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+      const res: Questionnaire | Error = await questionnaireService.update(mockQuestionnaire.id, { title: "test" }, 1);
 
-        // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
-        expect(() =>
-          questionnaireService.create({ title: mockQuestionnaire.title }, undefined)
-        ).rejects.toThrow("Error: Failed to create questionnaire");
-      });
+      expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
+      expect(validation.validator).toHaveBeenCalledTimes(1);
+      expect(res).toMatchObject(mockQuestionnaire);
     });
   });
 });

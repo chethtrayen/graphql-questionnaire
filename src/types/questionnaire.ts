@@ -72,7 +72,7 @@ export interface IQuestionnaire {
   //  */
   update(
     id: number,
-    updates: QuestionnaireEditable,
+    updated: QuestionnaireEditable,
     userId: number | undefined
   ): Promise<Questionnaire | ApolloError>;
 }

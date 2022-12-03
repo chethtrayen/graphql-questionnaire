@@ -7,6 +7,13 @@ import { getGraphQLContext } from "@context";
 import { getUserTkn } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
 
+const questionnaireSchemaValidation = {
+  id: expect.any(Number),
+  ownerId: expect.any(Number),
+  status: expect.any(String),
+  title: expect.any(String),
+};
+
 describe("Questionnaire", () => {
   let app: express.Application;
   let httpServer: http.Server;
@@ -37,32 +44,52 @@ describe("Questionnaire", () => {
 
     it("should return a successful response", async () => {
       const queryData = {
-        query: `mutation create($title: String!) 
+        query: `
+          mutation create($title: String!) 
           {
             createQuestionnaire(title: $title) 
             {id, ownerId, status, title}
           }
-          `,
+        `,
         variables,
       };
 
-      const response = await request(httpServer)
+      const res = await request(httpServer)
         .post("/graphql")
         .set("Authorization", "Bearer " + bearerTkn)
         .send(queryData);
 
-      expect(response.statusCode).toBe(200);
+      expect(res.statusCode).toBe(200);
+      expect(res.body.data.createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
+      expect(res.body.data.createQuestionnaire.title).toEqual(variables.title);
+    });
+  });
 
-      expect(response.body.data.createQuestionnaire).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          ownerId: expect.any(Number),
-          status: expect.any(String),
-          title: expect.any(String),
-        })
-      );
+  describe("POST /questionnare/update", () => {
+    const rand = Math.floor(Math.random() * 100);
+    const updated = { title: `updatedTitle-${rand}` };
 
-      expect(response.body.data.createQuestionnaire.title).toEqual(variables.title);
+    // eslint-disable-next-line jest/no-focused-tests
+    it.only("should return a successful response", async () => {
+      const queryData = {
+        query: `
+          mutation update($id: Int!, $updated: QuestionnaireEditable!)
+          {
+            updateQuestionnaire(id: $id, updated: $updated) 
+            {id, ownerId, status, title}
+          }
+        `,
+        variables: { id: 1, updated },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + bearerTkn)
+        .send(queryData);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.data.updateQuestionnaire).toEqual(questionnaireSchemaValidation);
+      expect(res.body.data.updateQuestionnaire.title).toEqual(updated.title);
     });
   });
 });
