@@ -1,12 +1,31 @@
 import prisma from "@prismaClient";
-import { Questionnaire, QuestionnaireEditable, QuestionnaireStatus } from "@type";
+import { Questionnaire, QuestionEditable, QuestionnaireEditable, QuestionnaireStatus } from "@type";
 
-export const create = async ({ title, userId }: { title: string; userId: number }): Promise<Questionnaire> => {
+export const create = async (questionnaire: QuestionnaireEditable, userId: number): Promise<Questionnaire> => {
   const insertRes: Questionnaire = (await prisma.questionnaire.create({
     data: {
+      ...questionnaire,
       ownerId: userId,
-      title: title,
     },
+  })) as unknown as Questionnaire;
+
+  return insertRes;
+};
+
+export const createWithQuestions = async (
+  questionnaire: QuestionnaireEditable,
+  questions: QuestionEditable[],
+  userId: number
+): Promise<Questionnaire> => {
+  const insertRes: Questionnaire = (await prisma.$transaction(async (tx) => {
+    // Insert questionnaire first
+    const insertedQuestionnaire = await tx.questionnaire.create({ data: { ...questionnaire, ownerId: userId } });
+
+    // Bulk insert questions
+    const questionQueries = questions.map((q) => tx.question.create({ data: { ...q, ownerId: userId, questionnaireId: insertedQuestionnaire.id } }));
+    const insertedQuestions = await Promise.all(questionQueries);
+
+    return { ...insertedQuestionnaire, questions: insertedQuestions };
   })) as unknown as Questionnaire;
 
   return insertRes;

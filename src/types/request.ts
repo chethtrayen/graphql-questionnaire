@@ -10,7 +10,7 @@ export type QuestionnaireUpdateRequest = {
 };
 
 export type QuestionnaireCreateRequest = {
-  inserted: QuestionnaireEditable;
+  questionnaire: QuestionnaireEditable;
   questions?: Question[];
 };
 

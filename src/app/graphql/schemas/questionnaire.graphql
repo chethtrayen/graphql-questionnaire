@@ -26,7 +26,7 @@ type Query {
 }
 
 type Mutation {
-  createQuestionnaire(title: String!): Questionnaire!
+  createQuestionnaire(questionnaire: QuestionnaireEditable!, questions: [QuestionEditable]): Questionnaire!
   publishQuestionnaire(id: Int!): QuestionnairePublish!
   updateQuestionnaire(id: Int!, updated: QuestionnaireEditable!): Questionnaire!
 }

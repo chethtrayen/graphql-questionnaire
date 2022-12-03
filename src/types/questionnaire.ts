@@ -20,7 +20,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireEditable, userId: number | undefined): APIResponse<Questionnaire>;
+  create(questionnaire: QuestionnaireEditable, questions: Question[] | undefined, userId: number | undefined): APIResponse<Questionnaire>;
 
   /**
    * Get published questionnaire

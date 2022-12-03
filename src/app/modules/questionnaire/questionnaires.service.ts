@@ -1,18 +1,23 @@
 import { ApolloError } from "@apollo/client/errors";
 import config from "@config";
 import { validate, validator } from "@helpers/validation";
-import { APIResponse, IQuestionnaire, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse } from "@type";
+import { APIResponse, IQuestionnaire, QuestionEditable, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse } from "@type";
 
 import * as QuestionnaireRepo from "./questionnaire.repo";
 
 const QuestionnaireService: IQuestionnaire = {
-  create: async (questionnaire: QuestionnaireEditable, userId: number): APIResponse<Questionnaire> => {
+  create: async (questionnaire: QuestionnaireEditable, questions: QuestionEditable[] | undefined, userId: number): APIResponse<Questionnaire> => {
     let insertRes: Questionnaire;
 
     try {
-      const { title } = questionnaire;
+      if (questions && questions.length > 0) {
+        insertRes = await QuestionnaireRepo.createWithQuestions(questionnaire, questions, userId);
 
-      insertRes = await QuestionnaireRepo.create({ title, userId });
+        // sort the questions by asc order
+        insertRes.questions = insertRes.questions?.sort((a, b) => a.order - b.order);
+      } else {
+        insertRes = await QuestionnaireRepo.create(questionnaire, userId);
+      }
 
       return insertRes;
     } catch (error) {

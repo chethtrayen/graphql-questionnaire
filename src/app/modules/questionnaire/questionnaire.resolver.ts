@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Context, APIResponse, Questionnaire, QuestionnaireEditable, QuestionnairePublishResponse, QuestionnaireUpdateRequest } from "@type";
+import { Context, APIResponse, Questionnaire, QuestionnaireCreateRequest, QuestionnairePublishResponse, QuestionnaireUpdateRequest } from "@type";
 
 import QuestionnaireService from "./questionnaires.service";
 
@@ -11,8 +11,8 @@ export default {
   },
 
   Mutation: {
-    createQuestionnaire: async (_: never, args: QuestionnaireEditable, context: Context): APIResponse<Questionnaire> => {
-      return await QuestionnaireService.create(args, context.user!.id);
+    createQuestionnaire: async (_: never, args: QuestionnaireCreateRequest, context: Context): APIResponse<Questionnaire> => {
+      return await QuestionnaireService.create(args.questionnaire, args.questions, context.user!.id);
     },
 
     publishQuestionnaire: async (_: never, args: { id: number }, context: Context): APIResponse<QuestionnairePublishResponse> => {
