@@ -20,6 +20,20 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
+  getPublishById: async (id: number): Promise<Questionnaire | ApolloError> => {
+    try {
+      const questionnaire: Questionnaire | undefined = await QuestionnaireRepo.getPublishById(id);
+
+      if (questionnaire) {
+        return questionnaire;
+      }
+
+      throw new ApolloError({ errorMessage: "Error: Failed to get questionnaire" });
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getByOwner: async (userId: number): Promise<Questionnaire[] | ApolloError> => {
     try {
       return await QuestionnaireRepo.getByOwner(userId);

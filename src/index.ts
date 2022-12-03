@@ -1,8 +1,9 @@
 import errorHandler from "errorhandler";
 import express from "express";
 import http from "http";
-import config from "./config";
 import { startGraphQLServer } from "./app/graphql/server";
+import config from "./config";
+import questionnaireRouter from "./routes/questionnaire";
 
 async function main(): Promise<void> {
   // Create Express server
@@ -14,19 +15,13 @@ async function main(): Promise<void> {
     app.use(errorHandler());
   }
 
-  app.get("/", (req, res) => {
-    console.log(req.query);
-    res.json({ hello: "hi" });
-  });
+  app.use("/questionnaire", questionnaireRouter);
 
   await startGraphQLServer(app, httpServer);
 
   // Start Express server.
   await new Promise<void>((resolve) => httpServer.listen(config.http.port, resolve));
-  console.log(
-    "[Server] Server is running on " +
-      `http://${config.http.host}:${config.http.port} in ${app.get("env") as string} mode.`
-  );
+  console.log("[Server] Server is running on " + `http://${config.http.host}:${config.http.port} in ${app.get("env") as string} mode.`);
   console.log("[Server] Press CTRL-C to stop.\n");
 }
 

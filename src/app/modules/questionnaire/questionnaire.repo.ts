@@ -12,6 +12,16 @@ export const create = async ({ title, userId }: { title: string; userId: number 
   return insertRes;
 };
 
+export const getPublishById = async (id: number): Promise<Questionnaire | undefined> => {
+  const questionnaire: Questionnaire = (await prisma.questionnaire.findFirst({
+    where: {
+      AND: [{ id }, { status: QuestionnaireStatus.PUBLISH }],
+    },
+  })) as unknown as Questionnaire;
+
+  return questionnaire;
+};
+
 export const getByOwner = async (ownerId: number): Promise<Questionnaire[]> => {
   const questionnaires: Questionnaire[] = (await prisma.questionnaire.findMany({
     where: {

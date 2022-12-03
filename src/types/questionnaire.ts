@@ -45,13 +45,12 @@ export interface IQuestionnaire {
    */
   // delete(id: number): Promise<boolean>;
 
-  // /**
-  //  * Get questionnaire
-  //  * If publish this is accessible to all, else accessible to the owner
-  //  *
-  //  * @param id questionnaire id
-  //  */
-  // getById(id: number): Promise<Questionnaire>;
+  /**
+   * Get published questionnaire
+   *
+   * @param id questionnaire id
+   */
+  getPublishById(id: number): Promise<Questionnaire | ApolloError>;
 
   /**
    * Get all user's questionnaires
