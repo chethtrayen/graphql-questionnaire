@@ -4,7 +4,7 @@ import http from "http";
 import request from "supertest";
 
 import { getGraphQLContext } from "@context";
-import { getUserTkn } from "@testHelpers";
+import { getTesterData, getTesterTkn } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
 
 const questionnaireSchemaValidation = {
@@ -18,12 +18,20 @@ describe("Questionnaire", () => {
   let app: express.Application;
   let httpServer: http.Server;
   let server: ApolloServer;
-  let bearerTkn: string;
-  beforeEach(async () => {
-    bearerTkn = await getUserTkn();
-  });
+  let testerTkn: string;
+  let negativeTesterTkn: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let testerData: any;
 
   beforeAll(async () => {
+    const token = await getTesterTkn();
+
+    testerTkn = token.testerTkn;
+    negativeTesterTkn = token.negativeTesterTkn;
+
+    testerData = await getTesterData();
+
     app = express();
     httpServer = http.createServer(app);
     server = new ApolloServer({
@@ -42,7 +50,7 @@ describe("Questionnaire", () => {
   describe("POST /questionnare/create", () => {
     const variables = { title: "foo@bar.com" };
 
-    it("should return a successful response", async () => {
+    it("should successfully create questionnaire", async () => {
       const queryData = {
         query: `
           mutation create($title: String!) 
@@ -56,12 +64,13 @@ describe("Questionnaire", () => {
 
       const res = await request(httpServer)
         .post("/graphql")
-        .set("Authorization", "Bearer " + bearerTkn)
+        .set("Authorization", "Bearer " + testerTkn)
         .send(queryData);
 
+      const { createQuestionnaire } = res.body.data;
       expect(res.statusCode).toBe(200);
-      expect(res.body.data.createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
-      expect(res.body.data.createQuestionnaire.title).toEqual(variables.title);
+      expect(createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
+      expect(createQuestionnaire.title).toEqual(variables.title);
     });
   });
 
@@ -69,8 +78,8 @@ describe("Questionnaire", () => {
     const rand = Math.floor(Math.random() * 100);
     const updated = { title: `updatedTitle-${rand}` };
 
-    // eslint-disable-next-line jest/no-focused-tests
-    it.only("should return a successful response", async () => {
+    it("should successfully update questionnaire", async () => {
+      const id = testerData.questionnaires[0].id;
       const queryData = {
         query: `
           mutation update($id: Int!, $updated: QuestionnaireEditable!)
@@ -79,17 +88,45 @@ describe("Questionnaire", () => {
             {id, ownerId, status, title}
           }
         `,
-        variables: { id: 1, updated },
+        variables: { id, updated },
       };
 
       const res = await request(httpServer)
         .post("/graphql")
-        .set("Authorization", "Bearer " + bearerTkn)
+        .set("Authorization", "Bearer " + testerTkn)
         .send(queryData);
 
+      const { updateQuestionnaire } = res.body.data;
+
       expect(res.statusCode).toBe(200);
-      expect(res.body.data.updateQuestionnaire).toEqual(questionnaireSchemaValidation);
-      expect(res.body.data.updateQuestionnaire.title).toEqual(updated.title);
+      expect(updateQuestionnaire).toEqual(questionnaireSchemaValidation);
+      expect(updateQuestionnaire.title).toEqual(updated.title);
+    });
+
+    it("should fail to update questionnaire from validation error", async () => {
+      const id = testerData.questionnaires[0].id;
+
+      const queryData = {
+        query: `
+          mutation update($id: Int!, $updated: QuestionnaireEditable!)
+          {
+            updateQuestionnaire(id: $id, updated: $updated) 
+            {id, ownerId, status, title}
+          }
+        `,
+        variables: { id, updated },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + negativeTesterTkn)
+        .send(queryData);
+
+      const { errors } = res.body;
+
+      expect(res.statusCode).toBe(200);
+      expect(errors.length).toEqual(1);
+      expect(errors[0].message).toEqual("Error: Failed to update questionniare");
     });
   });
 });

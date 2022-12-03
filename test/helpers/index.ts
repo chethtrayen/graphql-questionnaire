@@ -1,1 +1,2 @@
-export * from "./getUserTkn";
+export * from "./getTesterData";
+export * from "./getTesterTkn";
