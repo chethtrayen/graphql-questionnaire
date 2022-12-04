@@ -6,7 +6,7 @@ import { mockQuestionnaire, mockQuestions, mockQuestionWritable } from "@testHel
 
 jest.mock("@helpers/validation");
 
-describe("Question", () => {
+describe("Question unit test", () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
