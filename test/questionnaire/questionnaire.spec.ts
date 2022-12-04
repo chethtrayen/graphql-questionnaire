@@ -102,21 +102,34 @@ describe("Questionnaire", () => {
 
   describe("Update", () => {
     it("should update and return questionnaire", async () => {
-      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
-      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+      const mock = { ...mockQuestionnaire, title: "new title", questions: mockQuestions };
 
-      const res: Questionnaire | Error = await questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId);
+      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mock);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+      jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(true);
+
+      const res: Questionnaire | Error = await questionnaireService.update(mock, mockQuestionnaire.ownerId);
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
-      expect(res).toMatchObject(mockQuestionnaire);
+      expect(res).toMatchObject(mock);
     });
 
-    it("should return an error from validation", async () => {
+    it("should return an error from user validation", async () => {
+      jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(false);
+
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
+      await expect(() => questionnaireService.update(mockQuestionnaire, mockQuestionnaire.ownerId)).rejects.toThrow(
+        "Error: User doesn't own this questionnaire"
+      );
+    });
+
+    it("should return an error from question validation", async () => {
+      jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(true);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async
-      await expect(() => questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId)).rejects.toThrow(
+      await expect(() => questionnaireService.update(mockQuestionnaire, mockQuestionnaire.ownerId)).rejects.toThrow(
         "Error: Failed to update questionniare"
       );
     });
