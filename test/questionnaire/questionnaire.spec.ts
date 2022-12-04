@@ -26,9 +26,6 @@ describe("Questionnaire", () => {
       const mock = { ...mockQuestionnaire, questions: mockQuestions };
       jest.spyOn(prisma, "$transaction").mockResolvedValueOnce(mock);
 
-      // Mock all question created
-      //mockQuestions.forEach((question) => jest.spyOn(prisma.question, "create").mockResolvedValueOnce(question));
-
       const res: Questionnaire | Error = await questionnaireService.create(
         { title: mockQuestionnaire.title },
         mockQuestions,

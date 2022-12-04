@@ -8,7 +8,11 @@ export const getTesterData = async (): Promise<any> => {
       email: testUser.email,
     },
     include: {
-      questionnaires: true,
+      questionnaires: {
+        include: {
+          questions: true,
+        },
+      },
     },
   });
 

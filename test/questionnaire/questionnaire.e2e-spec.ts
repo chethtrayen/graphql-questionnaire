@@ -10,6 +10,7 @@ import { getTesterData, getTesterTkn, questionnaireSchemaValidation, questionSch
 import { resolvers, typeDefs } from "@testUtils";
 import { Question, QuestionnaireStatus } from "@type";
 import { mockQuestionWritable, mockQuestionnaireWritable } from "@testHelpers";
+import { addQuestion } from "test/helpers/question/addQuestion";
 
 describe("Questionnaire", () => {
   let app: express.Application;
@@ -27,8 +28,6 @@ describe("Questionnaire", () => {
     testerTkn = token.testerTkn;
     negativeTesterTkn = token.negativeTesterTkn;
 
-    testerData = await getTesterData();
-
     app = express();
     httpServer = http.createServer(app);
 
@@ -41,6 +40,10 @@ describe("Questionnaire", () => {
     });
     await server.start();
     server.applyMiddleware({ app });
+  });
+
+  beforeEach(async () => {
+    testerData = await getTesterData();
   });
 
   afterAll(async () => {
@@ -139,7 +142,7 @@ describe("Questionnaire", () => {
             createQuestionnaire(questionnaire: $questionnaire, questions: $questions) 
             {
               id, ownerId, status, title, questions {
-                answers, id, label, questionnaireId, order, ownerId, type, 
+                answers, id, label, questionnaireId, order, ownerId, type
               }
             }
           }
@@ -228,13 +231,35 @@ describe("Questionnaire", () => {
       }
     `;
 
+    const queryWithQuestions = `
+      mutation update($questionnaire: QuestionnaireUpdate!, $questions: [QuestionUpdate])
+      {
+        updateQuestionnaire(questionnaire: $questionnaire, questions: $questions)
+        {
+          id, ownerId, status, title, questions {
+            answers, id, label, questionnaireId, order, ownerId, type
+          }
+        }
+      }
+    `;
+
     const rand = Math.floor(Math.random() * 100);
     const writable = { title: `questionnaireTitle-${rand}` };
+
+    // Ensure that a questionnaire has a question to update
+    beforeAll(async () => {
+      const questionnaire = testerData.questionnaires[0];
+      const insertedQuestion = await addQuestion(questionnaire.id, testerData.id);
+      const questions = testerData.questionnaires[0].questions;
+
+      testerData.questionnaires[0].questions = [...questions, insertedQuestion];
+    });
 
     it("should successfully update questionnaire", async () => {
       const [questionnaire] = testerData.questionnaires;
 
       const updated = { ...questionnaire, ...writable };
+      delete updated.questions;
 
       const queryData = {
         query,
@@ -253,8 +278,48 @@ describe("Questionnaire", () => {
       expect(updateQuestionnaire).toMatchObject(updated);
     });
 
+    it("should successfully update questionnaire and questions", async () => {
+      const questionnaire = testerData.questionnaires[0];
+
+      // Split questions from questionnare to send to the query
+      const { questions, ...questionnaireData } = questionnaire;
+
+      const updatedQuestionnaire = { ...questionnaireData, ...writable };
+
+      // Update question
+      const updatedQuestions = { order: 5, label: "update-label", answers: ["update 1", "update 2"] };
+      questions[0] = { ...questions[0], ...updatedQuestions };
+
+      const queryData = {
+        query: queryWithQuestions,
+        variables: { questionnaire: updatedQuestionnaire, questions },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + testerTkn)
+        .send(queryData);
+
+      const { updateQuestionnaire } = res.body.data;
+
+      //Split questions from questionnaire for validation
+      const questionRes = updateQuestionnaire.questions;
+      delete updateQuestionnaire.questions;
+
+      expect(res.statusCode).toBe(200);
+
+      // Validate questionnaire
+      expect(updateQuestionnaire).toEqual(questionnaireSchemaValidation);
+      expect(updateQuestionnaire).toMatchObject(updateQuestionnaire);
+
+      // Validate questions
+      expect(questionRes[0]).toEqual(questionSchemaValidation(questionRes[0].answers));
+      expect(questionRes).toMatchObject(questions);
+    });
+
     it("should fail to update questionnaire from validation error", async () => {
       const [questionnaire] = testerData.questionnaires;
+      delete questionnaire.questions;
 
       const queryData = {
         query,
