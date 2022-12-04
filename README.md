@@ -1,140 +1,46 @@
-# Fueled NodeJS GraphQL starter template
+# File structure
 
-This repo contains the starter template for a NodeJS + TypeScript based GraphQL project.
+### Modules:
 
-## Requirements
+> Consolidate domain logic.
+> I used to this structure to better manage and handle code updates and isolate responsibilities
 
-- NodeJS v16+
-- NPM 7+
+- Repo: logic layer that interact with the database
+- Resolver: logic that that interacts with graphql
+- Service: logic layer that handles business logic by validating, handling data, implementing repo logic, and exported to the resolver
 
-## Features
+### Helper
 
-- [TypeScript](https://www.typescriptlang.org/)
-- [ExpressJS](https://github.com/expressjs/express)
-- [Apollo Server](https://github.com/apollographql/apollo-server) with [apollo-server-express](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-express) integration
-- [Prisma ORM](https://github.com/prisma/prisma) for database integration
-- [Jest](https://github.com/facebook/jest) for testing
-- Code formating & linting
-  - [ESLint](https://github.com/eslint/eslint) for code quality standards
-  - [Prettier](https://github.com/prettier/prettier) with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) for auto-formatting
-  - [EditorConfig](https://editorconfig.org/)
-- [Husky](https://github.com/typicode/husky) for pre-commit hooks
+- QuestionContext: Handle and manage different question types logic
 
-Husky is used for pre-commit hooks. It gets installed automatically via `npm i` as we have `prepare` lifecycle hook set.
-To avoid executing pre-commit scripts - append `--no-verify` flag to `git commit`.
+- Validation: Contain validate logic and validate them
+  - A one source for validation across the app
+  - Made it easy to mock the validation
 
-## Get Started
+### Utils
 
-The following will install all necessary packages and run the app under development mode which uses `nodemon` for reloading the build when changes are made.
+- Add auth path management for context
 
-```
-npm install
-npm run start:dev
-```
+# Test
 
-## Docker Setup
+- Add helper implement share logic across unit and e2e tests (eg. mocks, seeding, etc)
+- Add utils to handle test setup and typing
 
-A Dockerfile is available to run the backend services in a container exposed through ports. The Docker container
-includes the hot reloading Node application, PostgresSQL database, and Redis for caching.
+# Database
 
-The following services are available currently:
+- Add seeding for user, questionnaire, and questions
+- Ownership relationship to questions
+  - I added this to handle faster validation for update and delete
+  - For seeding, I have to individually seed each table
 
-```
-app        // Node application
-redis      // Redis server
-postgres   // PostgreSQL database
-```
+# Config
 
-To build and run the Docker container, ensure you have the Docker CLI available, and optionally Docker Desktop.
+- Update tsconfig and jestConfig to use relative paths
+- Add graphql-tools to merge resolvers and schemas
 
-To build the Docker container:
+# Notes
 
-```
-docker-compose build
-```
+- Used to [Trello](https://trello.com/invite/b/K2n4vgW3/ATTI0817dc3bd645469fd838510c91dd92e1FB730CBD/fueled-interview-task) for task management
+- Created [UML diagram](https://drive.google.com/file/d/1nAzJaukTOJL7XU26cbZmVMaF2PAcHdta/view?usp=sharing)
 
-To start the Docker container:
-
-```
-docker-compose up [-d]
-```
-
-To stop the Docker container:
-
-```
-docker-compose down
-```
-
-To run a specific container only:
-
-```
-docker-compose up [-d] <container_name>
-```
-
-## Authentication
-
-This repository provides basic interfaces & services to allow for a JWT based authentication mechanism to be used.
-
-`JwtService` - provides methods for signing & verifying a JWT token, along with others.
-
-`Authenticable` interface - to be implemented by the auth subject (e.g. user model). Current properties (`username`) are placeholders and are to be replaced with actual properties. When using the `Authenticable`, please replace the generic type in `graphql-context.ts` with the actualy implementation for better type hinting.
-
-## Testing
-
-This repository has npm commands & examples ready for:
-- Unit tests
-- E2E tests
-
-### Unit tests
-
-Unit tests should be used to test smaller fragments of code, for example, services. Database calls & HTTP calls are expcted to be mocked within unit tests. Any file within `test/` directory with a suffix of `.spec.ts` will be treated as a unit test file.
-
-### E2E tests
-
-E2E tests should be used to test API endpoints. It is expected to use actual database functionality instead of mocks. External 3rd party HTTP requests should be mocked. Any file within `test/` directory with a suffix of `.e2e-spec.ts` will be treated as an E2E test file.
-
-## Code formatting & quality
-
-This starter template uses ESLint along side Prettier, with separated responsibilities:
-- ESLint for code quality standards.
-- Prettier for code formatting standards.
-
-## ESLint
-
-ESLint is a code linter which mainly helps catch quickly minor code quality and style issues.
-
-Like most linters, ESLint has a wide set of configurable rules as well as support for custom rule sets. All rules are configured through `.eslintrc` configuration file.
-In this starter template ESLint rules are definied specifically around code quality, rather than formatting.
-
-### Running ESLint
-
-```
-npm run lint      // ESLint checks
-npm run lint:fix  // ESLint checks + attemt to fix errors
-npm run lint:all  // ESLint checks + attempt to fix errors & warnings
-```
-
-### VS Code extensions
-
-If you are interested in seeing ESLint feedback as soon as possible, I strongly recommend the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
-
-
-## Prettier
-
-Prettier is a code formatting tool which helps enforce a set of standardized formatting rules across all of our NodeJS projects.
-It's not able to enforce specific rules for code quality (especially with TypeScript), hence that responsibility is left to ESLint.
-
-### Running Prettier
-
-```
-npm run prettier      // Code formatting checks only
-npm run prettier:fix  // Code formatting fixes
-```
-
-### VS Code extensions
-
-The following plugin allows you to set Prettier as default code formatter as well as apply Prettier code formating upon file save - [VS Code Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).
-
-## Helpful VS Code extensions
-
-- [Format Code Action](https://marketplace.visualstudio.com/items?itemName=rohit-gohri.format-code-action&ssr=false#overview) - lets you run ESLint & Prettier in a particular order of your preference.
+> Remark: This was a fun interview program. I enjoy the amount of freedom. Even when took me a bit to figure what to do.
