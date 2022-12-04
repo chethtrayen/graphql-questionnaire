@@ -97,16 +97,29 @@ describe("Questionnaire", () => {
   });
 
   describe("Update", () => {
+    const mock = { ...mockQuestionnaire, title: "new title" };
+    const mockWithQuestions = { ...mock, questions: mockQuestions };
+
     it("should update and return questionnaire", async () => {
-      const mock = { ...mockQuestionnaire, title: "new title", questions: mockQuestions };
+      const mock = { ...mockQuestionnaire, title: "new title" };
 
       jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mock);
-      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
       jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(true);
 
       const res: Questionnaire | Error = await questionnaireService.update(mock, mockQuestionnaire.ownerId);
 
       expect(prisma.questionnaire.update).toHaveBeenCalledTimes(1);
+      expect(res).toMatchObject(mock);
+    });
+
+    it("should update and return questionnaire with questions", async () => {
+      jest.spyOn(prisma, "$transaction").mockResolvedValueOnce(mock);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+      jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(true);
+
+      const res: Questionnaire | Error = await questionnaireService.update(mockWithQuestions, mockQuestionnaire.ownerId);
+
+      expect(prisma.$transaction).toHaveBeenCalledTimes(1);
       expect(validation.validator).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mock);
     });
@@ -115,9 +128,7 @@ describe("Questionnaire", () => {
       jest.spyOn(validation.validate, "questionnaireOwnership").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async
-      await expect(() => questionnaireService.update(mockQuestionnaire, mockQuestionnaire.ownerId)).rejects.toThrow(
-        "Error: User doesn't own this questionnaire"
-      );
+      await expect(() => questionnaireService.update(mock, mockQuestionnaire.ownerId)).rejects.toThrow("Error: User doesn't own this questionnaire");
     });
 
     it("should return an error from question validation", async () => {
@@ -125,7 +136,7 @@ describe("Questionnaire", () => {
       jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
       // eslint-disable-next-line @typescript-eslint/promise-function-async
-      await expect(() => questionnaireService.update(mockQuestionnaire, mockQuestionnaire.ownerId)).rejects.toThrow(
+      await expect(() => questionnaireService.update(mockWithQuestions, mockQuestionnaire.ownerId)).rejects.toThrow(
         "Error: Failed to update questionniare"
       );
     });

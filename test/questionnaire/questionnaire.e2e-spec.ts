@@ -313,7 +313,7 @@ describe("Questionnaire", () => {
       expect(questionRes).toMatchObject(updatedQuestionnaire.questions);
     });
 
-    it("should fail to update questionnaire from validation error", async () => {
+    it("should fail to update questionnaire from ownership error", async () => {
       const [questionnaire] = testerData.questionnaires;
 
       delete questionnaire.questions;
@@ -332,6 +332,32 @@ describe("Questionnaire", () => {
       expect(res.statusCode).toBe(200);
       expect(errors.length).toEqual(1);
       expect(errors[0].message).toEqual("Error: User doesn't own this questionnaire");
+    });
+
+    it("hould fail to update questionnaire from question validation error", async () => {
+      const [questionnaire] = testerData.questionnaires;
+
+      const updatedQuestionnaire = { ...questionnaire, ...writable };
+      const [question] = updatedQuestionnaire.questions;
+
+      // Insert bad data
+      updatedQuestionnaire.questions[0] = { ...question, id: 1000000000, order: 5, label: "update-label", answers: ["update 1", "update 2"] };
+
+      const queryData = {
+        query: queryWithQuestions,
+        variables: { questionnaire: updatedQuestionnaire },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + testerTkn)
+        .send(queryData);
+
+      const { errors } = res.body;
+
+      expect(res.statusCode).toBe(200);
+      expect(errors.length).toEqual(1);
+      expect(errors[0].message).toEqual("Error: Failed to update questionniare");
     });
   });
 });
