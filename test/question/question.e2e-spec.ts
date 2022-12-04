@@ -5,7 +5,7 @@ import request from "supertest";
 
 import { getGraphQLContext } from "@context";
 import questionnaireRouter from "@routes/questionnaire";
-import { getTesterData, getTesterTkn, mockQuestionnaire, mockQuestions, questionnaireSchemaValidation, questionSchemaValidation } from "@testHelpers";
+import { getTesterData, getTesterTkn, questionSchemaValidation } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
 import { Question } from "@type";
 import { mockQuestionWritable } from "@testHelpers";

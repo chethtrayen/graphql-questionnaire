@@ -31,18 +31,11 @@ export interface IQuestion {
   //  */
   // delete(id: number): Promise<boolean>;
 
-  // /**
-  //  * Get questions from questionnaire
-  //  *
-  //  * @param questionnaireId questionnaire id
-  //  */
-  // getByQuestionnaire(questionnaireId: number): Promise<Question>[];
-
-  // /**
-  //  * (Owner only) update question
-  //  *
-  //  * @param id question id
-  //  * @param update Writable data
-  //  */
-  // update(id: number, update: QuestionWritable): Promise<boolean>;
+  /**
+   * (Owner only) update question
+   *
+   * @param id question id
+   * @param update Writable data
+   */
+  update(questions: Question[]): APIResponse<Question[]>;
 }

@@ -25,4 +25,5 @@ input QuestionWritable {
 
 type Mutation {
   createQuestion(questionnaireId: Int!, questions: [QuestionWritable]!): [Question]!
+  updateQuestion(questions: QuestionWritable!, id: number): [Question]!
 }
