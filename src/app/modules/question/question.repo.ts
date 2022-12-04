@@ -1,6 +1,6 @@
 import prisma from "@prismaClient";
 import { QuestionWritable, Question } from "@type";
-import { questionContext } from "@helpers/question/questionPrototype";
+import { questionContext } from "@helpers/question/questionContext";
 
 export const create = async (questionnaireId: number, questions: QuestionWritable[], userId: number): Promise<Question[]> => {
   // Bulk insert questions and return inserted questions

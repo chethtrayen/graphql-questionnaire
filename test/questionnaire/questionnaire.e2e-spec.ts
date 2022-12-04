@@ -6,9 +6,10 @@ import request from "supertest";
 import { getGraphQLContext } from "@context";
 import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import questionnaireRouter from "@routes/questionnaire";
-import { getTesterData, getTesterTkn, questionnaireSchemaValidation, updateQuestionnaireStatus } from "@testHelpers";
+import { getTesterData, getTesterTkn, questionnaireSchemaValidation, questionSchemaValidation, updateQuestionnaireStatus } from "@testHelpers";
 import { resolvers, typeDefs } from "@testUtils";
-import { QuestionnaireStatus } from "@type";
+import { Question, QuestionnaireStatus } from "@type";
+import { mockQuestionWritable, mockQuestionnaireWritable } from "@testHelpers";
 
 describe("Questionnaire", () => {
   let app: express.Application;
@@ -106,8 +107,6 @@ describe("Questionnaire", () => {
   });
 
   describe("POST /questionnare/create", () => {
-    const questionnaire = { title: "foo@bar.com" };
-
     it("should successfully create questionnaire", async () => {
       const queryData = {
         query: `
@@ -117,7 +116,7 @@ describe("Questionnaire", () => {
             {id, ownerId, status, title}
           }
         `,
-        variables: { questionnaire },
+        variables: { questionnaire: mockQuestionnaireWritable },
       };
 
       const res = await request(httpServer)
@@ -129,7 +128,40 @@ describe("Questionnaire", () => {
 
       expect(res.statusCode).toBe(200);
       expect(createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
-      expect(createQuestionnaire.title).toEqual(questionnaire.title);
+      expect(createQuestionnaire.title).toEqual(mockQuestionnaireWritable.title);
+    });
+
+    it("should successfully create questionnaire with questions", async () => {
+      const queryData = {
+        query: `
+          mutation create($questionnaire: QuestionnaireWritable!, $questions: [QuestionWritable]) 
+          {
+            createQuestionnaire(questionnaire: $questionnaire, questions: $questions) 
+            {
+              id, ownerId, status, title, questions {
+                answers, id, label, questionnaireId, order, ownerId, type, 
+              }
+            }
+          }
+        `,
+        variables: { questionnaire: mockQuestionnaireWritable, questions: mockQuestionWritable },
+      };
+
+      const res = await request(httpServer)
+        .post("/graphql")
+        .set("Authorization", "Bearer " + testerTkn)
+        .send(queryData);
+
+      const { createQuestionnaire } = res.body.data;
+
+      expect(res.statusCode).toBe(200);
+      expect(createQuestionnaire).toEqual(expect.objectContaining(questionnaireSchemaValidation));
+      expect(createQuestionnaire.title).toEqual(mockQuestionnaireWritable.title);
+      expect(createQuestionnaire.questions.length).toEqual(mockQuestionWritable.length);
+
+      createQuestionnaire.questions.forEach((q: Question) => {
+        expect(q).toEqual(expect.objectContaining(questionSchemaValidation(q.answers)));
+      });
     });
   });
 

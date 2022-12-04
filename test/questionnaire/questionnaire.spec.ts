@@ -3,17 +3,11 @@ import * as validation from "@helpers/validation";
 import questionnaireService from "@modules/questionnaire/questionnaires.service";
 import prisma from "@prismaClient";
 import { Questionnaire, QuestionnairePublishResponse, QuestionnaireStatus } from "@type";
+import { mockQuestionnaire, mockQuestions } from "@testHelpers";
 
 jest.mock("@helpers/validation");
 
 describe("Questionnaire", () => {
-  const mockQuestionnaire: Questionnaire = {
-    id: 1,
-    ownerId: 1,
-    status: QuestionnaireStatus.DRAFT,
-    title: "foo bar",
-  };
-
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -26,6 +20,23 @@ describe("Questionnaire", () => {
 
       expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mockQuestionnaire);
+    });
+
+    it("should create and return questionnaire with questions", async () => {
+      const mock = { ...mockQuestionnaire, questions: mockQuestions };
+      jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mock);
+
+      // Mock all question created
+      mockQuestions.forEach((question) => jest.spyOn(prisma.question, "create").mockResolvedValueOnce(question));
+
+      const res: Questionnaire | Error = await questionnaireService.create(
+        { title: mockQuestionnaire.title },
+        mockQuestions,
+        mockQuestionnaire.ownerId
+      );
+      expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
+      expect(prisma.question.create).toHaveBeenCalledTimes(mockQuestions.length);
+      expect(res).toMatchObject(mock);
     });
   });
 

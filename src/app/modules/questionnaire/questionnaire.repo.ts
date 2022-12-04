@@ -1,4 +1,4 @@
-import { questionContext } from "@helpers/question/questionPrototype";
+import { questionContext } from "@helpers/question/questionContext";
 import prisma from "@prismaClient";
 import { Questionnaire, QuestionWritable, QuestionnaireWritable, QuestionnaireStatus } from "@type";
 

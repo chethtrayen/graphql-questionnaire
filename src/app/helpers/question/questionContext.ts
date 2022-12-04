@@ -13,12 +13,12 @@ export abstract class QuestionPrototype {
     return { ...question, ownerId: userId, questionnaireId };
   }
 
-  abstract validateAnswerExist(question: Question, answer: string): Promise<boolean>;
+  abstract validateAnswer(question: Question, answer: string): Promise<boolean>;
 }
 
 class MultipleChoiceQuestion extends QuestionPrototype {
   // Check if answer exist in question
-  async validateAnswerExist(question: Question, answer: string): Promise<boolean> {
+  async validateAnswer(question: Question, answer: string): Promise<boolean> {
     const answers: string[] = (await prisma.question.findFirst({
       where: {
         id: question.id,
