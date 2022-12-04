@@ -18,12 +18,12 @@ type Question {
 
 input QuestionUpdate {
   id: Int!
-  ownerId: Int!
-  questionnaireId: Int!
-  label: String!
-  order: Int!
-  type: QuestionType!
-  answers: [String]!
+  ownerId: Int
+  questionnaireId: Int
+  label: String
+  order: Int
+  type: QuestionType
+  answers: [String]
 }
 
 input QuestionWritable {

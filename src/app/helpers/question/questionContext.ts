@@ -13,6 +13,13 @@ export abstract class QuestionPrototype {
     return { ...question, ownerId: userId, questionnaireId };
   }
 
+  // Get update data ready
+  update(question: Question): Omit<Question, "ownerId" | "questionnaireId"> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ownerId, questionnaireId, ...writable } = question;
+    return { ...writable, id };
+  }
+
   abstract validateAnswer(question: Question, answer: string): Promise<boolean>;
 }
 

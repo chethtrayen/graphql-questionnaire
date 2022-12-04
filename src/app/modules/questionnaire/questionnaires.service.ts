@@ -82,6 +82,7 @@ const QuestionnaireService: IQuestionnaire = {
       const { id, ownerId, status, ...writeable } = questionnaire;
 
       const isOwner = await validate.questionnaireOwnership(id, userId);
+
       if (!isOwner) {
         throw new ApolloError({ errorMessage: "Error: User doesn't own this questionnaire" });
       }
@@ -95,7 +96,11 @@ const QuestionnaireService: IQuestionnaire = {
         throw new ApolloError({ errorMessage: "Error: Failed to update questionniare" });
       }
 
-      return await QuestionnaireRepo.update(id, writeable);
+      if (questions.length) {
+        return await QuestionnaireRepo.updateWithQuestions(id, writeable, questions);
+      } else {
+        return await QuestionnaireRepo.update(id, writeable);
+      }
     } catch (error) {
       throw error;
     }
