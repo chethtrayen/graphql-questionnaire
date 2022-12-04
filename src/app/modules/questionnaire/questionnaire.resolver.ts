@@ -20,7 +20,7 @@ export default {
     },
 
     updateQuestionnaire: async (_: never, args: QuestionnaireUpdateRequest, context: Context): APIResponse<Questionnaire> => {
-      return await QuestionnaireService.update(args.id, args.updated, context.user!.id);
+      return await QuestionnaireService.update(args.id, args.questionnaire, context.user!.id);
     },
   },
 };

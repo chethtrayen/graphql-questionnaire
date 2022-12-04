@@ -87,12 +87,12 @@ export const publish = async (id: number): Promise<Questionnaire> => {
   return updateRes;
 };
 
-export const update = async ({ id, updated }: { id: number; updated: QuestionnaireWritable }): Promise<Questionnaire> => {
+export const update = async (id: number, questionnaire: QuestionnaireWritable): Promise<Questionnaire> => {
   const updateRes: Questionnaire = (await prisma.questionnaire.update({
     where: {
       id,
     },
-    data: updated,
+    data: questionnaire,
   })) as unknown as Questionnaire;
 
   return updateRes;

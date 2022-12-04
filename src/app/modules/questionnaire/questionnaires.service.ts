@@ -67,7 +67,7 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
-  update: async (id: number, updated: QuestionnaireWritable, userId: number): APIResponse<Questionnaire> => {
+  update: async (id: number, questionnaire: QuestionnaireWritable, userId: number): APIResponse<Questionnaire> => {
     try {
       const isValid = await validator([validate.questionnaireOwnership(id, userId)]);
 
@@ -75,7 +75,7 @@ const QuestionnaireService: IQuestionnaire = {
         throw new ApolloError({ errorMessage: "Error: Failed to update questionniare" });
       }
 
-      return await QuestionnaireRepo.update({ id, updated });
+      return await QuestionnaireRepo.update(id, questionnaire);
     } catch (error) {
       throw error;
     }

@@ -52,5 +52,5 @@ export interface IQuestionnaire {
    * @param update Writable data
    */
 
-  update(id: number, updated: QuestionnaireWritable, userId: number | undefined): APIResponse<Questionnaire>;
+  update(id: number, questionnaire: QuestionnaireWritable, userId: number | undefined): APIResponse<Questionnaire>;
 }

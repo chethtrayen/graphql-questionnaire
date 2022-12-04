@@ -6,7 +6,7 @@ export interface RequestUtils<R> {
 
 export type QuestionnaireUpdateRequest = {
   id: number;
-  updated: QuestionnaireWritable;
+  questionnaire: QuestionnaireWritable;
 };
 
 export type QuestionnaireCreateRequest = {

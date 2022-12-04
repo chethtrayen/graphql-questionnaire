@@ -221,21 +221,21 @@ describe("Questionnaire", () => {
 
   describe("POST /questionnare/update", () => {
     const query = `
-      mutation update($id: Int!, $updated: QuestionnaireWritable!)
+      mutation update($id: Int!, $questionnaire: QuestionnaireWritable!)
       {
-        updateQuestionnaire(id: $id, updated: $updated) 
+        updateQuestionnaire(id: $id, questionnaire: $questionnaire) 
         {id, ownerId, status, title}
       }
     `;
 
     const rand = Math.floor(Math.random() * 100);
-    const updated = { title: `updatedTitle-${rand}` };
+    const questionnaire = { title: `questionnaireTitle-${rand}` };
 
     it("should successfully update questionnaire", async () => {
       const id = testerData.questionnaires[0].id;
       const queryData = {
         query,
-        variables: { id, updated },
+        variables: { id, questionnaire },
       };
 
       const res = await request(httpServer)
@@ -247,7 +247,7 @@ describe("Questionnaire", () => {
 
       expect(res.statusCode).toBe(200);
       expect(updateQuestionnaire).toEqual(questionnaireSchemaValidation);
-      expect(updateQuestionnaire.title).toEqual(updated.title);
+      expect(updateQuestionnaire.title).toEqual(questionnaire.title);
     });
 
     it("should fail to update questionnaire from validation error", async () => {
@@ -255,7 +255,7 @@ describe("Questionnaire", () => {
 
       const queryData = {
         query,
-        variables: { id, updated },
+        variables: { id, questionnaire },
       };
 
       const res = await request(httpServer)
