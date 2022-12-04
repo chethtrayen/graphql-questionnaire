@@ -1,6 +1,6 @@
 import { questionContext } from "@helpers/question/questionContext";
 import prisma from "@prismaClient";
-import { Question, Questionnaire, QuestionWritable, QuestionnaireWritable, QuestionnaireStatus } from "@type";
+import { Questionnaire, QuestionWritable, QuestionnaireWritable, QuestionnaireStatus, QuestionUpdate } from "@type";
 
 export const create = async (questionnaire: QuestionnaireWritable, userId: number): Promise<Questionnaire> => {
   const insertRes: Questionnaire = (await prisma.questionnaire.create({
@@ -98,8 +98,9 @@ export const update = async (id: number, questionnaire: QuestionnaireWritable): 
   return updateRes;
 };
 
-export const updateWithQuestions = async (id: number, questionnaire: QuestionnaireWritable, questions: Question[]): Promise<Questionnaire> => {
+export const updateWithQuestions = async (id: number, questionnaire: QuestionnaireWritable, questions: QuestionUpdate[]): Promise<Questionnaire> => {
   const updateRes: Questionnaire = (await prisma.$transaction(async (tx) => {
+    // Update questionnaire
     const updatedQuestionnaire = await tx.questionnaire.update({
       where: {
         id,
@@ -107,11 +108,10 @@ export const updateWithQuestions = async (id: number, questionnaire: Questionnai
       data: questionnaire,
     });
 
-    const questionQuery = questions.map((q: Question) => {
-      const context = questionContext(q.type);
+    // Bulk update questions
+    const questionQuery = questions.map((q: QuestionUpdate) => {
+      const { id, ...writable } = q;
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const { id, ...writable } = context!.update(q);
       return tx.question.update({
         where: {
           id,

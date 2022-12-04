@@ -1,7 +1,8 @@
 import { ApolloError } from "@apollo/client/errors";
+import { questionContext } from "@helpers/question/questionContext";
 import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import { validate, validator } from "@helpers/validation";
-import { APIResponse, IQuestionnaire, Questionnaire, QuestionnaireCreate, QuestionnairePublishResponse } from "@type";
+import { APIResponse, IQuestionnaire, Question, Questionnaire, QuestionnaireCreate, QuestionnairePublishResponse, QuestionUpdate } from "@type";
 
 import * as QuestionnaireRepo from "./questionnaire.repo";
 
@@ -81,15 +82,21 @@ const QuestionnaireService: IQuestionnaire = {
       }
 
       if (questions?.length) {
-        // eslint-disable-next-line @typescript-eslint/promise-function-async
-        const questionValidate = questions.map((q) => validate.questionExistInQuestionnaire(q.id, id));
+        const questionContexts = questions.map((q: Question) => questionContext(q.type));
+
+        // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-non-null-assertion
+        const questionValidate = questionContexts.map((q, i) => q!.validateExistInQuestionnaire(questions[i].id, questionnaire.id));
 
         const isValid = await validator(questionValidate);
+
         if (!isValid) {
           throw new ApolloError({ errorMessage: "Error: Failed to update questionniare" });
         }
 
-        return await QuestionnaireRepo.updateWithQuestions(id, writeable, questions);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const questionUpdates: QuestionUpdate[] = questionContexts.map((q, i) => q!.update(questions[i]));
+
+        return await QuestionnaireRepo.updateWithQuestions(id, writeable, questionUpdates);
       } else {
         return await QuestionnaireRepo.update(id, writeable);
       }

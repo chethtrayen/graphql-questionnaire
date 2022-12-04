@@ -21,6 +21,16 @@ export abstract class QuestionPrototype {
   }
 
   abstract validateAnswer(question: Question, answer: string): Promise<boolean>;
+
+  async validateExistInQuestionnaire(questionId: number, questionnaireId: number): Promise<boolean> {
+    const result = await prisma.question.findFirst({
+      where: {
+        AND: [{ id: questionId }, { questionnaireId }],
+      },
+    });
+
+    return Boolean(result);
+  }
 }
 
 class MultipleChoiceQuestion extends QuestionPrototype {

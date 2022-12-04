@@ -15,6 +15,10 @@ export interface Question extends BaseQuestion {}
 
 export type QuestionWritable = Omit<BaseQuestion, "id" | "ownerId" | "questionnaireId">;
 
+export interface QuestionUpdate extends QuestionWritable {
+  id: number;
+}
+
 export interface IQuestion {
   /**
    * Create question
