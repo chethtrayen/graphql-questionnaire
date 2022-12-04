@@ -24,10 +24,10 @@ describe("Questionnaire", () => {
 
     it("should create and return questionnaire with questions", async () => {
       const mock = { ...mockQuestionnaire, questions: mockQuestions };
-      jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mock);
+      jest.spyOn(prisma, "$transaction").mockResolvedValueOnce(mock);
 
       // Mock all question created
-      mockQuestions.forEach((question) => jest.spyOn(prisma.question, "create").mockResolvedValueOnce(question));
+      //mockQuestions.forEach((question) => jest.spyOn(prisma.question, "create").mockResolvedValueOnce(question));
 
       const res: Questionnaire | Error = await questionnaireService.create(
         { title: mockQuestionnaire.title },
@@ -35,8 +35,7 @@ describe("Questionnaire", () => {
         mockQuestionnaire.ownerId
       );
 
-      expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
-      expect(prisma.question.create).toHaveBeenCalledTimes(mockQuestions.length);
+      expect(prisma.$transaction).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mock);
     });
   });
