@@ -31,4 +31,24 @@ describe("Question", () => {
       );
     });
   });
+
+  describe("Delete", () => {
+    const [mock] = mockQuestions;
+    it("should delete and return questions", async () => {
+      jest.spyOn(prisma.question, "delete").mockResolvedValueOnce(mock);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(true);
+
+      const res: Question | Error = await questionService.delete(mock.id, mock.ownerId);
+
+      expect(prisma.question.delete).toHaveBeenCalledTimes(1);
+      expect(res).toMatchObject(mock);
+    });
+
+    it("should return an error from validation", async () => {
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
+
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
+      await expect(() => questionService.delete(mock.id, mock.ownerId)).rejects.toThrow("Error: Failed to delete question");
+    });
+  });
 });
