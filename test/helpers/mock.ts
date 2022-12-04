@@ -32,7 +32,7 @@ export const mockQuestions: Question[] = mockQuestionWritable.map((q) => {
   const context = questionContext(q.type);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const data = context!.build(q, mockQuestionnaire.id, userId);
+  const data = context!.getBuildData(q, mockQuestionnaire.id, userId);
 
   return { ...data, id: 2 };
 });

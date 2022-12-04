@@ -9,12 +9,12 @@ export const questionContext = (type: QuestionType): QuestionPrototype | undefin
 
 export abstract class QuestionPrototype {
   // Include relational ids to all prototypes
-  build(question: QuestionWritable, questionnaireId: number, userId: number): Omit<Question, "id"> {
+  getBuildData(question: QuestionWritable, questionnaireId: number, userId: number): Omit<Question, "id"> {
     return { ...question, ownerId: userId, questionnaireId };
   }
 
   // Get update data ready
-  update(question: Question): Omit<Question, "ownerId" | "questionnaireId"> {
+  getUpdateData(question: Question): Omit<Question, "ownerId" | "questionnaireId"> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ownerId, questionnaireId, ...writable } = question;
     return { ...writable, id };

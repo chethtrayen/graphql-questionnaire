@@ -94,7 +94,7 @@ const QuestionnaireService: IQuestionnaire = {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const questionUpdates: QuestionUpdate[] = questionContexts.map((q, i) => q!.update(questions[i]));
+        const questionUpdates: QuestionUpdate[] = questionContexts.map((q, i) => q!.getUpdateData(questions[i]));
 
         return await QuestionnaireRepo.updateWithQuestions(id, writeable, questionUpdates);
       } else {

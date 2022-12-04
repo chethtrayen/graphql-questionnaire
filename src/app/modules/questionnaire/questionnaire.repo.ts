@@ -27,7 +27,7 @@ export const createWithQuestions = async (
       const context = questionContext(q.type);
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const data = context!.build(q, insertedQuestionnaire.id, userId);
+      const data = context!.getBuildData(q, insertedQuestionnaire.id, userId);
 
       return tx.question.create({ data });
     });
