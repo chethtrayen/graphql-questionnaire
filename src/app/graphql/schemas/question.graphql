@@ -16,6 +16,16 @@ type Question {
   answers: [String]!
 }
 
+input QuestionUpdate {
+  id: Int!
+  ownerId: Int!
+  questionnaireId: Int!
+  label: String!
+  order: Int!
+  type: QuestionType!
+  answers: [String]!
+}
+
 input QuestionWritable {
   label: String!
   order: Int

@@ -17,3 +17,13 @@ export const questionOwnership = async (id: number, ownerId: number): Promise<bo
   });
   return Boolean(result);
 };
+
+export const questionExistInQuestionnaire = async (questionId: number, questionnaireId: number): Promise<boolean> => {
+  const result = await prisma.question.findFirst({
+    where: {
+      AND: [{ id: questionId }, { questionnaireId }],
+    },
+  });
+
+  return Boolean(result);
+};

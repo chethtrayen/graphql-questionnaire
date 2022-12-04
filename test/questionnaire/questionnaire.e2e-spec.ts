@@ -174,8 +174,8 @@ describe("Questionnaire", () => {
       }
     `;
 
-    it("should successfully update questionnaire", async () => {
-      const id = testerData.questionnaires[0].id;
+    it("should successfully publish questionnaire", async () => {
+      const id = testerData.questionnaires[1].id;
 
       const queryData = {
         query,
@@ -221,21 +221,24 @@ describe("Questionnaire", () => {
 
   describe("POST /questionnare/update", () => {
     const query = `
-      mutation update($id: Int!, $questionnaire: QuestionnaireWritable!)
+      mutation update($questionnaire: QuestionnaireUpdate!)
       {
-        updateQuestionnaire(id: $id, questionnaire: $questionnaire) 
+        updateQuestionnaire(questionnaire: $questionnaire)
         {id, ownerId, status, title}
       }
     `;
 
     const rand = Math.floor(Math.random() * 100);
-    const questionnaire = { title: `questionnaireTitle-${rand}` };
+    const writable = { title: `questionnaireTitle-${rand}` };
 
     it("should successfully update questionnaire", async () => {
-      const id = testerData.questionnaires[0].id;
+      const [questionnaire] = testerData.questionnaires;
+
+      const updated = { ...questionnaire, ...writable };
+
       const queryData = {
         query,
-        variables: { id, questionnaire },
+        variables: { questionnaire: updated },
       };
 
       const res = await request(httpServer)
@@ -247,15 +250,15 @@ describe("Questionnaire", () => {
 
       expect(res.statusCode).toBe(200);
       expect(updateQuestionnaire).toEqual(questionnaireSchemaValidation);
-      expect(updateQuestionnaire.title).toEqual(questionnaire.title);
+      expect(updateQuestionnaire).toMatchObject(updated);
     });
 
     it("should fail to update questionnaire from validation error", async () => {
-      const id = testerData.questionnaires[0].id;
+      const [questionnaire] = testerData.questionnaires;
 
       const queryData = {
         query,
-        variables: { id, questionnaire },
+        variables: { questionnaire },
       };
 
       const res = await request(httpServer)
@@ -267,7 +270,7 @@ describe("Questionnaire", () => {
 
       expect(res.statusCode).toBe(200);
       expect(errors.length).toEqual(1);
-      expect(errors[0].message).toEqual("Error: Failed to update questionniare");
+      expect(errors[0].message).toEqual("Error: User doesn't own this questionnaire");
     });
   });
 });

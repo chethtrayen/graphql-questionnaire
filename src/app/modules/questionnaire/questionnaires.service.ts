@@ -1,16 +1,25 @@
 import { ApolloError } from "@apollo/client/errors";
 import { generatePublishQuestionniareUrl } from "@helpers/urlGenrator";
 import { validate, validator } from "@helpers/validation";
-import { APIResponse, IQuestionnaire, QuestionWritable, Questionnaire, QuestionnaireWritable, QuestionnairePublishResponse } from "@type";
+import {
+  APIResponse,
+  IQuestionnaire,
+  Question,
+  QuestionWritable,
+  Questionnaire,
+  QuestionnaireWritable,
+  QuestionnairePublishResponse,
+  BaseQuestionnaire,
+} from "@type";
 
 import * as QuestionnaireRepo from "./questionnaire.repo";
 
 const QuestionnaireService: IQuestionnaire = {
-  create: async (questionnaire: QuestionnaireWritable, questions: QuestionWritable[] | undefined, userId: number): APIResponse<Questionnaire> => {
+  create: async (questionnaire: QuestionnaireWritable, questions: QuestionWritable[] = [], userId: number): APIResponse<Questionnaire> => {
     let insertRes: Questionnaire;
 
     try {
-      if (questions && questions.length > 0) {
+      if (questions.length > 0) {
         insertRes = await QuestionnaireRepo.createWithQuestions(questionnaire, questions, userId);
 
         // sort the questions by asc order
@@ -67,15 +76,26 @@ const QuestionnaireService: IQuestionnaire = {
     }
   },
 
-  update: async (id: number, questionnaire: QuestionnaireWritable, userId: number): APIResponse<Questionnaire> => {
+  update: async (questionnaire: BaseQuestionnaire, userId: number, questions: Question[] = []): APIResponse<Questionnaire> => {
     try {
-      const isValid = await validator([validate.questionnaireOwnership(id, userId)]);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ownerId, status, ...writeable } = questionnaire;
+
+      const isOwner = await validate.questionnaireOwnership(id, userId);
+      if (!isOwner) {
+        throw new ApolloError({ errorMessage: "Error: User doesn't own this questionnaire" });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
+      const questionValidate = questions.map((q) => validate.questionExistInQuestionnaire(q.id, id));
+
+      const isValid = await validator(questionValidate);
 
       if (!isValid) {
         throw new ApolloError({ errorMessage: "Error: Failed to update questionniare" });
       }
 
-      return await QuestionnaireRepo.update(id, questionnaire);
+      return await QuestionnaireRepo.update(id, writeable);
     } catch (error) {
       throw error;
     }
