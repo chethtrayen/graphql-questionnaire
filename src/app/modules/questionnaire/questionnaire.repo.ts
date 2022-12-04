@@ -1,3 +1,4 @@
+import { questionContext } from "@helpers/questionPrototype";
 import prisma from "@prismaClient";
 import { Questionnaire, QuestionWritable, QuestionnaireWritable, QuestionnaireStatus } from "@type";
 
@@ -22,7 +23,15 @@ export const createWithQuestions = async (
     const insertedQuestionnaire = await tx.questionnaire.create({ data: { ...questionnaire, ownerId: userId } });
 
     // Bulk insert questions
-    const questionQueries = questions.map((q) => tx.question.create({ data: { ...q, ownerId: userId, questionnaireId: insertedQuestionnaire.id } }));
+    const questionQueries = questions.map((q) => {
+      const context = questionContext(q.type);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const data = context!.build(q, insertedQuestionnaire.id, userId);
+
+      return tx.question.create({ data });
+    });
+
     const insertedQuestions = await Promise.all(questionQueries);
 
     return { ...insertedQuestionnaire, questions: insertedQuestions };
