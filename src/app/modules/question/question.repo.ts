@@ -16,3 +16,13 @@ export const create = async (questionnaireId: number, questions: QuestionWritabl
 
   return insertRes;
 };
+
+export const deleteById = async (id: number): Promise<Question> => {
+  const deleteRes: Question = (await prisma.question.delete({
+    where: {
+      id,
+    },
+  })) as unknown as Question;
+
+  return deleteRes;
+};

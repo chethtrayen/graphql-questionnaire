@@ -18,6 +18,20 @@ const QuestionService: IQuestion = {
       throw error;
     }
   },
+
+  delete: async (id: number, userId: number): APIResponse<Question> => {
+    try {
+      const isValid = await validator([validate.questionOwnership(id, userId)]);
+
+      if (!isValid) {
+        throw new ApolloError({ errorMessage: "Error: Failed to delete question" });
+      }
+
+      return await QuestionRepo.deleteById(id);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default QuestionService;

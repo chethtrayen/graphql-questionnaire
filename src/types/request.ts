@@ -9,6 +9,10 @@ export type QuestionCreateRequest = {
   questions: QuestionWritable[];
 };
 
+export type QuestionDeleteRequest = {
+  id: number;
+};
+
 export type QuestionnaireCreateRequest = {
   questionnaire: QuestionnaireCreate;
 };

@@ -35,4 +35,5 @@ input QuestionCreate {
 
 type Mutation {
   createQuestion(questionnaireId: Int!, questions: [QuestionCreate]!): [Question]!
+  deleteQuestion(id: Int!): Question!
 }

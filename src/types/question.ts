@@ -28,10 +28,10 @@ export interface IQuestion {
    */
   create(questionnaireId: number, questions: QuestionWritable[], userId: number): APIResponse<Question[]>;
 
-  // /**
-  //  * (Owner only) delete question
-  //  *
-  //  * @param id question id
-  //  */
-  // delete(id: number): Promise<boolean>;
+  /**
+   * (Owner only) delete question
+   *
+   * @param id question id
+   */
+  delete(id: number, userId: number): APIResponse<Question>;
 }
