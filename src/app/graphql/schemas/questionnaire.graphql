@@ -17,6 +17,7 @@ input QuestionnaireUpdate {
   ownerId: Int
   status: QuestionnaireStatus
   title: String
+  questions: [QuestionUpdate]
 }
 
 type QuestionnairePublish {

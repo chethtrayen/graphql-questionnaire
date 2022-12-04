@@ -279,20 +279,16 @@ describe("Questionnaire", () => {
     });
 
     it("should successfully update questionnaire and questions", async () => {
-      const questionnaire = testerData.questionnaires[0];
+      const [questionnaire] = testerData.questionnaires;
 
-      // Split questions from questionnare to send to the query
-      const { questions, ...questionnaireData } = questionnaire;
+      const updatedQuestionnaire = { ...questionnaire, ...writable };
+      const [question] = updatedQuestionnaire.questions;
 
-      const updatedQuestionnaire = { ...questionnaireData, ...writable };
-
-      // Update question
-      const updatedQuestions = { order: 5, label: "update-label", answers: ["update 1", "update 2"] };
-      questions[0] = { ...questions[0], ...updatedQuestions };
+      updatedQuestionnaire.questions[0] = { ...question, order: 5, label: "update-label", answers: ["update 1", "update 2"] };
 
       const queryData = {
         query: queryWithQuestions,
-        variables: { questionnaire: updatedQuestionnaire, questions },
+        variables: { questionnaire: updatedQuestionnaire },
       };
 
       const res = await request(httpServer)
@@ -314,13 +310,13 @@ describe("Questionnaire", () => {
 
       // Validate questions
       expect(questionRes[0]).toEqual(questionSchemaValidation(questionRes[0].answers));
-      expect(questionRes).toMatchObject(questions);
+      expect(questionRes).toMatchObject(updatedQuestionnaire.questions);
     });
 
     it("should fail to update questionnaire from validation error", async () => {
       const [questionnaire] = testerData.questionnaires;
-      delete questionnaire.questions;
 
+      delete questionnaire.questions;
       const queryData = {
         query,
         variables: { questionnaire },
