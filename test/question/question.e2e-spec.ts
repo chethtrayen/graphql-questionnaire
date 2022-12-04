@@ -10,7 +10,7 @@ import { Question } from "@type";
 import { mockQuestionWritable } from "@testHelpers";
 import { addQuestion } from "test/helpers/question/addQuestion";
 
-describe("Questionnaire", () => {
+describe("Question e2e test", () => {
   let app: express.Application;
   let httpServer: http.Server;
   let server: ApolloServer;
@@ -44,7 +44,7 @@ describe("Questionnaire", () => {
     await server.stop();
   });
 
-  describe("POST /question/create", () => {
+  describe("Create question query", () => {
     const query = `
       mutation create($questionnaireId: Int!, $questions: [QuestionCreate]!)
       {
@@ -99,7 +99,7 @@ describe("Questionnaire", () => {
     });
   });
 
-  describe("Delete /question", () => {
+  describe("Delete question query", () => {
     const query = `
       mutation delete($id: Int!)
       {

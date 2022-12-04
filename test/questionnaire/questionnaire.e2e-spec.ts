@@ -50,7 +50,7 @@ describe("Questionnaire", () => {
     await server.stop();
   });
 
-  describe("GET /questionnare/", () => {
+  describe("Get questionnaire", () => {
     it("should successfully create questionnaire", async () => {
       const query = `
          {getQuestionnaires {id, ownerId, status, title}}
@@ -69,7 +69,7 @@ describe("Questionnaire", () => {
   });
 
   describe("GET /questionnare/published", () => {
-    it("should successfully update questionnaire", async () => {
+    it("should successfully get questionnaire", async () => {
       const id = testerData.questionnaires[0].id;
 
       // Update questionnaire status to publish
@@ -109,7 +109,7 @@ describe("Questionnaire", () => {
     });
   });
 
-  describe("POST /questionnare/create", () => {
+  describe("Create questionnaire query", () => {
     it("should successfully create questionnaire", async () => {
       const queryData = {
         query: `
@@ -169,7 +169,7 @@ describe("Questionnaire", () => {
     });
   });
 
-  describe("POST /questionnare/publish", () => {
+  describe("Publish questionnaire query", () => {
     const query = `
       mutation publish($id: Int!)
       {
@@ -223,7 +223,7 @@ describe("Questionnaire", () => {
     });
   });
 
-  describe("POST /questionnare/update", () => {
+  describe("Update questionnaire query", () => {
     const query = `
       mutation update($questionnaire: QuestionnaireUpdate!)
       {
