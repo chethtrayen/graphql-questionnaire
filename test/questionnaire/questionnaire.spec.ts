@@ -34,6 +34,7 @@ describe("Questionnaire", () => {
         mockQuestions,
         mockQuestionnaire.ownerId
       );
+
       expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
       expect(prisma.question.create).toHaveBeenCalledTimes(mockQuestions.length);
       expect(res).toMatchObject(mock);
@@ -67,7 +68,7 @@ describe("Questionnaire", () => {
     it("should return an error from status", async () => {
       jest.spyOn(prisma.questionnaire, "findFirst").mockResolvedValueOnce(null);
 
-      // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
       await expect(() => questionnaireService.getPublishById(mock.id)).rejects.toThrow("Error: Failed to get questionnaire");
     });
   });
@@ -90,10 +91,9 @@ describe("Questionnaire", () => {
     });
 
     it("should return an error from validation", async () => {
-      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
       jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
-      // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
       await expect(() => questionnaireService.publish(mockQuestionnaire.id, mockQuestionnaire.ownerId)).rejects.toThrow(
         "Error: Failed to publish questionniare"
       );
@@ -113,10 +113,9 @@ describe("Questionnaire", () => {
     });
 
     it("should return an error from validation", async () => {
-      jest.spyOn(prisma.questionnaire, "update").mockResolvedValueOnce(mockQuestionnaire);
-      //jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
+      jest.spyOn(validation, "validator").mockResolvedValueOnce(false);
 
-      // eslint-disable-next-line @typescript-eslint/promise-function-async, @typescript-eslint/no-floating-promises, jest/valid-expect
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
       await expect(() => questionnaireService.update(mockQuestionnaire.id, { title: "test" }, mockQuestionnaire.ownerId)).rejects.toThrow(
         "Error: Failed to update questionniare"
       );
