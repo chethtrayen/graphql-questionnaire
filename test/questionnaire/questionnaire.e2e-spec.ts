@@ -113,7 +113,7 @@ describe("Questionnaire", () => {
     it("should successfully create questionnaire", async () => {
       const queryData = {
         query: `
-          mutation create($questionnaire: QuestionnaireWritable!) 
+          mutation create($questionnaire: QuestionnaireCreate!) 
           {
             createQuestionnaire(questionnaire: $questionnaire) 
             {id, ownerId, status, title}
@@ -126,7 +126,6 @@ describe("Questionnaire", () => {
         .post("/graphql")
         .set("Authorization", "Bearer " + testerTkn)
         .send(queryData);
-
       const { createQuestionnaire } = res.body.data;
 
       expect(res.statusCode).toBe(200);
@@ -135,11 +134,13 @@ describe("Questionnaire", () => {
     });
 
     it("should successfully create questionnaire with questions", async () => {
+      const questionnaire = { ...mockQuestionnaireWritable, questions: mockQuestionWritable };
+
       const queryData = {
         query: `
-          mutation create($questionnaire: QuestionnaireWritable!, $questions: [QuestionWritable]) 
+          mutation create($questionnaire: QuestionnaireCreate!) 
           {
-            createQuestionnaire(questionnaire: $questionnaire, questions: $questions) 
+            createQuestionnaire(questionnaire: $questionnaire) 
             {
               id, ownerId, status, title, questions {
                 answers, id, label, questionnaireId, order, ownerId, type
@@ -147,7 +148,7 @@ describe("Questionnaire", () => {
             }
           }
       `,
-        variables: { questionnaire: mockQuestionnaireWritable, questions: mockQuestionWritable },
+        variables: { questionnaire },
       };
 
       const res = await request(httpServer)
@@ -232,9 +233,9 @@ describe("Questionnaire", () => {
     `;
 
     const queryWithQuestions = `
-      mutation update($questionnaire: QuestionnaireUpdate!, $questions: [QuestionUpdate])
+      mutation update($questionnaire: QuestionnaireUpdate!)
       {
-        updateQuestionnaire(questionnaire: $questionnaire, questions: $questions)
+        updateQuestionnaire(questionnaire: $questionnaire)
         {
           id, ownerId, status, title, questions {
             answers, id, label, questionnaireId, order, ownerId, type

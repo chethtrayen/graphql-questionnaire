@@ -26,7 +26,7 @@ input QuestionUpdate {
   answers: [String]
 }
 
-input QuestionWritable {
+input QuestionCreate {
   label: String!
   order: Int
   type: QuestionType!
@@ -34,5 +34,5 @@ input QuestionWritable {
 }
 
 type Mutation {
-  createQuestion(questionnaireId: Int!, questions: [QuestionWritable]!): [Question]!
+  createQuestion(questionnaireId: Int!, questions: [QuestionCreate]!): [Question]!
 }

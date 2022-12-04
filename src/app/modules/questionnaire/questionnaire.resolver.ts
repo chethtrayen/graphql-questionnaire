@@ -12,7 +12,7 @@ export default {
 
   Mutation: {
     createQuestionnaire: async (_: never, args: QuestionnaireCreateRequest, context: Context): APIResponse<Questionnaire> => {
-      return await QuestionnaireService.create(args.questionnaire, args.questions, context.user!.id);
+      return await QuestionnaireService.create(args.questionnaire, context.user!.id);
     },
 
     publishQuestionnaire: async (_: never, args: { id: number }, context: Context): APIResponse<QuestionnairePublishResponse> => {

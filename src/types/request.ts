@@ -1,4 +1,4 @@
-import { Questionnaire, QuestionWritable, QuestionnaireWritable, Question } from "@type";
+import { Questionnaire, QuestionWritable, QuestionnaireCreate } from "@type";
 
 export interface RequestUtils<R> {
   getTokenFromRequest(req: R): string | null;
@@ -10,8 +10,7 @@ export type QuestionCreateRequest = {
 };
 
 export type QuestionnaireCreateRequest = {
-  questionnaire: QuestionnaireWritable;
-  questions?: Question[];
+  questionnaire: QuestionnaireCreate;
 };
 
 export type QuestionnaireUpdateRequest = {

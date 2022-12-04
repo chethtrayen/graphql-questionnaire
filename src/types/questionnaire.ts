@@ -1,4 +1,4 @@
-import { APIResponse, Question, QuestionnairePublishResponse, QuestionnaireStatus } from "@type";
+import { APIResponse, Question, QuestionnairePublishResponse, QuestionnaireStatus, QuestionWritable } from "@type";
 
 export type BaseQuestionnaire = {
   id: number;
@@ -13,6 +13,10 @@ export interface Questionnaire extends BaseQuestionnaire {
 
 export type QuestionnaireWritable = Omit<BaseQuestionnaire, "id" | "ownerId" | "status">;
 
+export interface QuestionnaireCreate extends QuestionnaireWritable {
+  questions?: QuestionWritable[];
+}
+
 export interface IQuestionnaire {
   /**
    * Create questionnaire
@@ -20,7 +24,7 @@ export interface IQuestionnaire {
    * @param questionnaire questionnaire create data
    */
 
-  create(questionnaire: QuestionnaireWritable, questions: Question[] | undefined, userId: number | undefined): APIResponse<Questionnaire>;
+  create(inserted: QuestionnaireCreate, userId: number | undefined): APIResponse<Questionnaire>;
 
   /**
    * Get published questionnaire
@@ -52,5 +56,5 @@ export interface IQuestionnaire {
    * @param update Writable data
    */
 
-  update(questionnaire: BaseQuestionnaire, userId: number | undefined, questions?: Question[]): APIResponse<Questionnaire>;
+  update(updated: BaseQuestionnaire, userId: number | undefined, questions?: Question[]): APIResponse<Questionnaire>;
 }

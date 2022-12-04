@@ -3,7 +3,7 @@ import * as validation from "@helpers/validation";
 import questionnaireService from "@modules/questionnaire/questionnaires.service";
 import prisma from "@prismaClient";
 import { Questionnaire, QuestionnairePublishResponse, QuestionnaireStatus } from "@type";
-import { mockQuestionnaire, mockQuestions } from "@testHelpers";
+import { mockQuestionnaire, mockQuestionnaireWritable, mockQuestions, mockQuestionWritable } from "@testHelpers";
 
 jest.mock("@helpers/validation");
 
@@ -16,7 +16,7 @@ describe("Questionnaire", () => {
     it("should create and return questionnaire", async () => {
       jest.spyOn(prisma.questionnaire, "create").mockResolvedValueOnce(mockQuestionnaire);
 
-      const res: Questionnaire | Error = await questionnaireService.create({ title: mockQuestionnaire.title }, undefined, mockQuestionnaire.ownerId);
+      const res: Questionnaire | Error = await questionnaireService.create(mockQuestionnaireWritable, mockQuestionnaire.ownerId);
 
       expect(prisma.questionnaire.create).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mockQuestionnaire);
@@ -24,13 +24,11 @@ describe("Questionnaire", () => {
 
     it("should create and return questionnaire with questions", async () => {
       const mock = { ...mockQuestionnaire, questions: mockQuestions };
+      const inserted = { ...mockQuestionnaireWritable, questions: mockQuestionWritable };
+
       jest.spyOn(prisma, "$transaction").mockResolvedValueOnce(mock);
 
-      const res: Questionnaire | Error = await questionnaireService.create(
-        { title: mockQuestionnaire.title },
-        mockQuestions,
-        mockQuestionnaire.ownerId
-      );
+      const res: Questionnaire | Error = await questionnaireService.create(inserted, mockQuestionnaire.ownerId);
 
       expect(prisma.$transaction).toHaveBeenCalledTimes(1);
       expect(res).toMatchObject(mock);

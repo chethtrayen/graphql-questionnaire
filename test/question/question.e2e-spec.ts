@@ -46,9 +46,9 @@ describe("Questionnaire", () => {
     await server.stop();
   });
 
-  describe("POST /questionnare/update", () => {
+  describe("POST /question/create", () => {
     const query = `
-      mutation create($questionnaireId: Int!, $questions: [QuestionWritable]!)
+      mutation create($questionnaireId: Int!, $questions: [QuestionCreate]!)
       {
         createQuestion(questionnaireId: $questionnaireId, questions: $questions)
         {
@@ -57,7 +57,7 @@ describe("Questionnaire", () => {
       }
     `;
 
-    it("should successfully update questionnaire", async () => {
+    it("should successfully create question", async () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
