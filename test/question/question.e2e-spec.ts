@@ -47,19 +47,21 @@ describe("Questionnaire", () => {
   });
 
   describe("POST /questionnare/update", () => {
+    const query = `
+      mutation create($questionnaireId: Int!, $questions: [QuestionWritable]!)
+      {
+        createQuestion(questionnaireId: $questionnaireId, questions: $questions)
+        {
+          answers, id, label, questionnaireId, order, ownerId, type, 
+        }
+      }
+    `;
+
     it("should successfully update questionnaire", async () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
-        query: `
-          mutation create($questionnaireId: Int!, $questions: [QuestionWritable]!)
-          {
-            createQuestion(questionnaireId: $questionnaireId, questions: $questions)
-            {
-              answers, id, label, questionnaireId, order, ownerId, type, 
-            }
-          }
-        `,
+        query,
         variables: { questionnaireId: id, questions: mockQuestionWritable },
       };
 
@@ -82,15 +84,7 @@ describe("Questionnaire", () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
-        query: `
-          mutation create($questionnaireId: Int!, $questions: [QuestionWritable]!)
-          {
-            createQuestion(questionnaireId: $questionnaireId, questions: $questions)
-            {
-              answers, id, label, questionnaireId, order, ownerId, type, 
-            }
-          }
-        `,
+        query,
         variables: { questionnaireId: id, questions: mockQuestionWritable },
       };
 

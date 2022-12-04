@@ -143,7 +143,7 @@ describe("Questionnaire", () => {
               }
             }
           }
-        `,
+      `,
         variables: { questionnaire: mockQuestionnaireWritable, questions: mockQuestionWritable },
       };
 
@@ -166,17 +166,19 @@ describe("Questionnaire", () => {
   });
 
   describe("POST /questionnare/publish", () => {
+    const query = `
+      mutation publish($id: Int!)
+      {
+        publishQuestionnaire(id: $id)
+        {questionnaire {id, ownerId, status, title}, url}
+      }
+    `;
+
     it("should successfully update questionnaire", async () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
-        query: `
-          mutation publish($id: Int!)
-          {
-            publishQuestionnaire(id: $id)
-            {questionnaire {id, ownerId, status, title}, url}
-          }
-        `,
+        query,
         variables: { id },
       };
 
@@ -200,13 +202,7 @@ describe("Questionnaire", () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
-        query: `
-          mutation publish($id: Int!) 
-          {
-            publishQuestionnaire(id: $id)
-            {questionnaire {id, ownerId, status, title}, url}
-          }
-        `,
+        query,
         variables: { id },
       };
 
@@ -224,19 +220,21 @@ describe("Questionnaire", () => {
   });
 
   describe("POST /questionnare/update", () => {
+    const query = `
+      mutation update($id: Int!, $updated: QuestionnaireWritable!)
+      {
+        updateQuestionnaire(id: $id, updated: $updated) 
+        {id, ownerId, status, title}
+      }
+    `;
+
     const rand = Math.floor(Math.random() * 100);
     const updated = { title: `updatedTitle-${rand}` };
 
     it("should successfully update questionnaire", async () => {
       const id = testerData.questionnaires[0].id;
       const queryData = {
-        query: `
-          mutation update($id: Int!, $updated: QuestionnaireWritable!)
-          {
-            updateQuestionnaire(id: $id, updated: $updated) 
-            {id, ownerId, status, title}
-          }
-        `,
+        query,
         variables: { id, updated },
       };
 
@@ -256,13 +254,7 @@ describe("Questionnaire", () => {
       const id = testerData.questionnaires[0].id;
 
       const queryData = {
-        query: `
-          mutation update($id: Int!, $updated: QuestionnaireWritable!)
-          {
-            updateQuestionnaire(id: $id, updated: $updated) 
-            {id, ownerId, status, title}
-          }
-        `,
+        query,
         variables: { id, updated },
       };
 
